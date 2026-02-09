@@ -61,6 +61,8 @@ const flightTargets = [
 // ===================================================================
 let projection, path, svg, g, zoom, mapContainer, tooltip;
 let activeGroupId = null;
+let cachedWorldData = null;
+let resizeTimer = null;
 
 function initD3Map() {
   mapContainer = document.getElementById('map-container');
@@ -94,25 +96,27 @@ function initD3Map() {
 
   // Load world data
   d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then((world) => {
-    const land = topojson.feature(world, world.objects.land);
-
-    // Draw land — no borders, no labels, just silhouette
-    g.append('g')
-      .selectAll('path')
-      .data(land.features || [land])
-      .join('path')
-      .attr('class', 'land')
-      .attr('d', path);
-
-    // Draw flight paths
-    drawFlightPaths();
-
-    // Draw markers
-    drawMarkers();
-
-    // Build sidebar
+    cachedWorldData = world;
+    const skeleton = mapContainer.querySelector('.map-skeleton');
+    if (skeleton) skeleton.remove();
+    renderMap(world);
     buildSidebar();
+  }).catch(() => {
+    const container = document.getElementById('map-container');
+    if (container) container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#6b7280;font-size:0.9rem;">Map could not be loaded. Please try again later.</div>';
   });
+}
+
+function renderMap(world) {
+  const land = topojson.feature(world, world.objects.land);
+  g.append('g')
+    .selectAll('path')
+    .data(land.features || [land])
+    .join('path')
+    .attr('class', 'land')
+    .attr('d', path);
+  drawFlightPaths();
+  drawMarkers();
 }
 
 function drawFlightPaths() {
@@ -247,7 +251,13 @@ function resetMapView() {
   svg.transition()
     .duration(1000)
     .call(zoom.transform, d3.zoomIdentity);
+  activeGroupId = null;
+  document.querySelectorAll('.location-item').forEach((item) => item.classList.remove('active'));
 }
+
+// Wire reset button
+const resetBtn = document.querySelector('.map-reset-btn');
+if (resetBtn) resetBtn.addEventListener('click', resetMapView);
 
 function buildSidebar() {
   const list = document.getElementById('locationList');
@@ -268,7 +278,15 @@ function buildSidebar() {
         <div class="location-cities">${cityNames}</div>
       </div>
     `;
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
     item.addEventListener('click', () => selectGroup(group.id));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectGroup(group.id);
+      }
+    });
     list.appendChild(item);
   });
 }
@@ -296,8 +314,14 @@ document.querySelectorAll('.card, .section-heading, .section-badge, .section-sub
 // Smooth scroll nav
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', (e) => {
+    const href = anchor.getAttribute('href');
+    if (href === '#') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     e.preventDefault();
-    const target = document.querySelector(anchor.getAttribute('href'));
+    const target = document.querySelector(href);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
@@ -306,15 +330,26 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 const mobileToggle = document.querySelector('.mobile-toggle');
 const navLinks = document.querySelector('.nav-links');
 if (mobileToggle) {
-  mobileToggle.addEventListener('click', () => navLinks.classList.toggle('mobile-open'));
+  mobileToggle.setAttribute('aria-expanded', 'false');
+  mobileToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('mobile-open');
+    mobileToggle.setAttribute('aria-expanded', String(isOpen));
+  });
 }
 
-// Navbar scroll
+// Navbar scroll (throttled with rAF)
 const navbar = document.querySelector('.navbar');
+let scrollTicking = false;
 window.addEventListener('scroll', () => {
-  navbar.style.background = window.scrollY > 50
-    ? 'rgba(10, 14, 26, 0.95)'
-    : 'rgba(10, 14, 26, 0.8)';
+  if (!scrollTicking) {
+    requestAnimationFrame(() => {
+      navbar.style.background = window.scrollY > 50
+        ? 'rgba(10, 14, 26, 0.95)'
+        : 'rgba(10, 14, 26, 0.8)';
+      scrollTicking = false;
+    });
+    scrollTicking = true;
+  }
 });
 
 // Init map when travel section is visible
@@ -333,19 +368,16 @@ const mapObserver = new IntersectionObserver(
 const travelSection = document.getElementById('travel');
 if (travelSection) mapObserver.observe(travelSection);
 
-// Handle resize
+// Handle resize (debounced, uses cached data)
 window.addEventListener('resize', () => {
-  if (!svg) return;
-  const width = mapContainer.clientWidth;
-  const height = mapContainer.clientHeight;
-  projection.scale(width / 5.5).translate([width / 2, height / 2]);
-  svg.attr('width', width).attr('height', height);
-  // Redraw everything
-  g.selectAll('*').remove();
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then((world) => {
-    const land = topojson.feature(world, world.objects.land);
-    g.append('g').selectAll('path').data(land.features || [land]).join('path').attr('class', 'land').attr('d', path);
-    drawFlightPaths();
-    drawMarkers();
-  });
+  if (!svg || !cachedWorldData) return;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const width = mapContainer.clientWidth;
+    const height = mapContainer.clientHeight;
+    projection.scale(width / 5.5).translate([width / 2, height / 2]);
+    svg.attr('width', width).attr('height', height);
+    g.selectAll('*').remove();
+    renderMap(cachedWorldData);
+  }, 250);
 });
