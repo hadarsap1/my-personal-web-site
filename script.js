@@ -203,7 +203,7 @@ function showTooltip(event, cityName, group) {
     tooltip.style.left = (x - tr.width - 30) + 'px';
   }
   if (y + tr.height > mapContainer.clientHeight) {
-    tooltip.style.top = (y - tr.height) + 'px';
+    tooltip.style.top = Math.max(0, y - tr.height) + 'px';
   }
 }
 
@@ -312,6 +312,11 @@ document.querySelectorAll('.card, .section-heading, .section-badge, .section-sub
   observer.observe(el);
 });
 
+// Stagger bento grid cards
+document.querySelectorAll('.hero-grid > .card, .hero-grid > .card-stat').forEach((el, i) => {
+  el.classList.add(`stagger-${Math.min(i, 7)}`);
+});
+
 // Active nav state
 const navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
 const sections = document.querySelectorAll('.section, .hero, .contact-section');
@@ -324,7 +329,7 @@ const navObserver = new IntersectionObserver(
           const isActive = link.getAttribute('href') === `#${id}`;
           link.classList.toggle('nav-active', isActive);
           if (isActive) {
-            link.setAttribute('aria-current', 'page');
+            link.setAttribute('aria-current', 'location');
           } else {
             link.removeAttribute('aria-current');
           }
@@ -338,6 +343,10 @@ sections.forEach((section) => {
   if (section.id) navObserver.observe(section);
 });
 
+// Mobile menu elements (declared early for reuse in scroll handler)
+const mobileToggle = document.querySelector('.mobile-toggle');
+const navLinks = document.querySelector('.nav-links');
+
 // Smooth scroll nav
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', (e) => {
@@ -345,17 +354,20 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     if (href === '#') {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+    } else {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Close mobile menu if open
+    if (navLinks && navLinks.classList.contains('mobile-open')) {
+      navLinks.classList.remove('mobile-open');
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+    }
   });
 });
 
-// Mobile menu
-const mobileToggle = document.querySelector('.mobile-toggle');
-const navLinks = document.querySelector('.nav-links');
+// Mobile menu (mobileToggle/navLinks declared above smooth scroll for reuse)
 if (mobileToggle) {
   mobileToggle.setAttribute('aria-expanded', 'false');
   mobileToggle.addEventListener('click', () => {
