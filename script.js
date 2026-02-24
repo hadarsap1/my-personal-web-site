@@ -1,5 +1,5 @@
 // ===================================================================
-// TRAVEL MAP — Built with D3.js (SVG). No tile/marker alignment issues.
+// TRAVEL MAP - Built with D3.js (SVG). No tile/marker alignment issues.
 // ===================================================================
 
 // All cities with EXACT [longitude, latitude] for D3 (note: D3 uses [lng, lat])
@@ -39,7 +39,7 @@ const insightGroups = [
   { id: 'azores-lisbon', name: 'Azores & Lisbon', title: 'Adaptability', insight: 'Navigating shifting environments with agility and curiosity.' },
   { id: 'usa', name: 'New York & Phoenix', title: 'Market Scale', insight: 'Understanding the velocity and requirements of the US market.' },
   { id: 'sri-lanka-maldives', name: 'Sri Lanka & Maldives', title: 'The Power of Focus', insight: 'Finding clarity and strategic depth in complex environments.' },
-  { id: 'poland-slovakia', name: 'South Poland & Slovakia', title: 'Endurance', insight: 'Pushing boundaries in tough terrains—the same mindset needed for long product cycles.' },
+  { id: 'poland-slovakia', name: 'South Poland & Slovakia', title: 'Endurance', insight: 'Pushing boundaries in tough terrains-the same mindset needed for long product cycles.' },
   { id: 'spain-france', name: 'N. Spain, Paris & Provence', title: 'Aesthetic Precision', insight: 'Perfection in the details, from gastronomy to UI/UX.' },
   { id: 'greece', name: 'Greece, Rhodes & Peloponnese', title: 'Heritage & Scale', insight: 'Building on solid foundations while scaling for the future.' },
   { id: 'germany-warsaw', name: 'Germany & Warsaw', title: 'Systemic Efficiency', insight: 'Mastering optimization, structure, and operational excellence.' },
@@ -72,7 +72,7 @@ function initD3Map() {
   const width = mapContainer.clientWidth;
   const height = mapContainer.clientHeight;
 
-  // Natural Earth projection — looks great, no distortion
+  // Natural Earth projection - looks great, no distortion
   projection = d3.geoNaturalEarth1()
     .scale(width / 5.5)
     .translate([width / 2, height / 2]);
@@ -248,6 +248,7 @@ function selectGroup(id) {
 }
 
 function resetMapView() {
+  if (!svg || !zoom) return;
   svg.transition()
     .duration(1000)
     .call(zoom.transform, d3.zoomIdentity);
@@ -309,6 +310,32 @@ document.querySelectorAll('.card, .section-heading, .section-badge, .section-sub
   if (el.classList.contains('map-card')) return;
   el.classList.add('fade-in');
   observer.observe(el);
+});
+
+// Active nav state
+const navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
+const sections = document.querySelectorAll('.section, .hero, .contact-section');
+const navObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinksAll.forEach((link) => {
+          const isActive = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('nav-active', isActive);
+          if (isActive) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+      }
+    });
+  },
+  { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' }
+);
+sections.forEach((section) => {
+  if (section.id) navObserver.observe(section);
 });
 
 // Smooth scroll nav
