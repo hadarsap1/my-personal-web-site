@@ -7,10 +7,12 @@ Static portfolio site. No frameworks, no build tools, no bundler. Edit files dir
 - `style.css` (~1124 lines) — all styles, CSS custom properties in `:root`
 - `script.js` (~422 lines) — D3.js travel map + scroll animations
 - `profile.jpg` (1MB), `adventure.jpg` (3.6MB) — hero images
+- `analytics.js` (~97 lines) — lightweight visitor tracking via Supabase (ipapi.co geo, UA parsing)
+- `dashboard.html` (~380 lines) — private analytics dashboard (password-gated, D3.js charts, reads Supabase)
 - `.github/workflows/deploy.yml` — GitHub Pages deploy on push to `master`
 
 ## Stack
-HTML5 + CSS3 + vanilla JS. External: D3.js v7, TopoJSON v3, Inter font (all CDN).
+HTML5 + CSS3 + vanilla JS. External: D3.js v7, TopoJSON v3, Inter font, Supabase JS v2 (all CDN). Supabase (free tier) for analytics DB.
 
 ## Sections (in order)
 `#home` (hero/bento grid) → `#experience` → mid-CTA → `#travel` (D3 map) → `#mission` → `#contact`
