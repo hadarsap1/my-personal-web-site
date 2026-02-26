@@ -65,7 +65,8 @@
     .hist-label { fill: var(--color-text-muted); font-size: 11px; }
 
     /* ===== Visitor Map ===== */
-    .map-land { fill: #1e293b; stroke: rgba(255,255,255,0.08); stroke-width: 0.5; }
+    .map-ocean { fill: #0d1321; }
+    .map-land { fill: #1e293b; stroke: rgba(255,255,255,0.12); stroke-width: 0.5; }
     .map-dot { fill: var(--color-primary); opacity: 0.7; stroke: rgba(59,130,246,0.3); stroke-width: 2; }
     .map-tooltip { position: absolute; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; font-size: 0.75rem; color: var(--color-text-secondary); pointer-events: none; z-index: 10; white-space: nowrap; display: none; }
 
@@ -398,6 +399,9 @@
     var projection = d3.geoNaturalEarth1().scale(width / 5.5).translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
 
+    // Ocean background
+    svg.append('rect').attr('class', 'map-ocean').attr('width', width).attr('height', height).attr('rx', 8);
+
     // Load world map
     d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function (world) {
       var countries = topojson.feature(world, world.objects.countries);
@@ -429,7 +433,7 @@
           tooltip.style.top = (event.offsetY - 10) + 'px';
         })
         .on('mouseleave', function () { tooltip.style.display = 'none'; });
-    });
+    }).catch(function () { container.innerHTML = '<p class="ref-empty">Could not load map data.</p>'; });
   }
 
   // ── Visitor Log ──
