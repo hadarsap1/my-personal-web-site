@@ -449,7 +449,7 @@
 
       if (locations.length) {
         var maxCount = d3.max(locations, function (d) { return d.count; }) || 1;
-        var rScale = d3.scaleSqrt().domain([1, Math.max(maxCount, 2)]).range([3, 10]);
+        var rScale = d3.scaleSqrt().domain([1, Math.max(maxCount, 2)]).range([2, 6]);
 
         g.selectAll('.map-dot').data(locations).enter().append('circle')
           .attr('class', 'map-dot')
