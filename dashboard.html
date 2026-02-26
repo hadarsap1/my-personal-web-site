@@ -65,10 +65,15 @@
     .hist-label { fill: var(--color-text-muted); font-size: 11px; }
 
     /* ===== Visitor Map ===== */
-    .map-ocean { fill: #0d1321; }
-    .map-land { fill: #1e293b; stroke: rgba(255,255,255,0.12); stroke-width: 0.5; }
-    .map-dot { fill: var(--color-primary); opacity: 0.7; stroke: rgba(59,130,246,0.3); stroke-width: 2; }
+    #chart-map { position: relative; min-height: 300px; }
+    #chart-map svg { display: block; border-radius: 8px; background: #0d1321; }
+    .map-land { fill: #1e293b; stroke: rgba(255,255,255,0.15); stroke-width: 0.5; }
+    .map-dot { fill: var(--color-primary); opacity: 0.75; stroke: rgba(59,130,246,0.4); stroke-width: 2; cursor: pointer; }
+    .map-dot:hover { opacity: 1; stroke-width: 3; }
     .map-tooltip { position: absolute; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; font-size: 0.75rem; color: var(--color-text-secondary); pointer-events: none; z-index: 10; white-space: nowrap; display: none; }
+    .map-controls { position: absolute; top: 0.5rem; right: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; z-index: 5; }
+    .map-btn { width: 28px; height: 28px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-card); color: var(--color-text-muted); font-size: 1rem; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all var(--transition-fast); }
+    .map-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
     /* ===== Visitor Log Table ===== */
     .visitor-log-wrap { max-height: 480px; overflow-y: auto; overflow-x: auto; }
@@ -386,26 +391,48 @@
     document.getElementById('kpi-org').textContent = orgs.length ? orgs[0][0] : '—';
   }
 
-  // ── Visitor Map (D3 + TopoJSON) ──
+  // ── Visitor Map (D3 + TopoJSON + Zoom) ──
   function renderVisitorMap() {
     var container = document.getElementById('chart-map');
     container.innerHTML = '';
     var tooltip = document.getElementById('map-tooltip');
 
-    var width = container.clientWidth;
-    var height = Math.min(width * 0.5, 400);
+    var width = container.clientWidth || container.getBoundingClientRect().width || 800;
+    var height = Math.max(Math.min(width * 0.5, 420), 280);
 
-    var svg = d3.select(container).append('svg').attr('width', width).attr('height', height);
+    var svg = d3.select(container).append('svg')
+      .attr('width', width).attr('height', height)
+      .style('cursor', 'grab');
+
+    var g = svg.append('g');
+
     var projection = d3.geoNaturalEarth1().scale(width / 5.5).translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
 
-    // Ocean background
-    svg.append('rect').attr('class', 'map-ocean').attr('width', width).attr('height', height).attr('rx', 8);
+    // Zoom behavior
+    var zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', function (event) {
+      g.attr('transform', event.transform);
+    });
+    svg.call(zoom);
+
+    // Zoom controls
+    var controls = document.createElement('div');
+    controls.className = 'map-controls';
+    controls.innerHTML = '<button class="map-btn" data-zoom="in">+</button><button class="map-btn" data-zoom="out">&minus;</button><button class="map-btn" data-zoom="reset" style="font-size:0.65rem;">R</button>';
+    container.appendChild(controls);
+    controls.addEventListener('click', function (e) {
+      var btn = e.target.closest('.map-btn');
+      if (!btn) return;
+      var action = btn.dataset.zoom;
+      if (action === 'in') svg.transition().duration(300).call(zoom.scaleBy, 1.5);
+      else if (action === 'out') svg.transition().duration(300).call(zoom.scaleBy, 0.67);
+      else svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+    });
 
     // Load world map
     d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function (world) {
       var countries = topojson.feature(world, world.objects.countries);
-      svg.selectAll('.map-land').data(countries.features).enter().append('path').attr('class', 'map-land').attr('d', path);
+      g.selectAll('.map-land').data(countries.features).enter().append('path').attr('class', 'map-land').attr('d', path);
 
       // Plot visitor dots — aggregate by location
       var locMap = {};
@@ -417,23 +444,28 @@
       });
       var locations = Object.values(locMap);
 
-      var rScale = d3.scaleSqrt().domain([1, d3.max(locations, function (d) { return d.count; }) || 1]).range([3, 14]);
+      if (locations.length) {
+        var rScale = d3.scaleSqrt().domain([1, d3.max(locations, function (d) { return d.count; }) || 1]).range([4, 16]);
 
-      svg.selectAll('.map-dot').data(locations).enter().append('circle')
-        .attr('class', 'map-dot')
-        .attr('cx', function (d) { return projection([d.lng, d.lat])[0]; })
-        .attr('cy', function (d) { return projection([d.lng, d.lat])[1]; })
-        .attr('r', function (d) { return rScale(d.count); })
-        .on('mouseenter', function (event, d) {
-          tooltip.style.display = 'block';
-          tooltip.textContent = d.city + (d.city && d.country ? ', ' : '') + d.country + ' — ' + d.count + ' visit' + (d.count > 1 ? 's' : '');
-        })
-        .on('mousemove', function (event) {
-          tooltip.style.left = (event.offsetX + 12) + 'px';
-          tooltip.style.top = (event.offsetY - 10) + 'px';
-        })
-        .on('mouseleave', function () { tooltip.style.display = 'none'; });
-    }).catch(function () { container.innerHTML = '<p class="ref-empty">Could not load map data.</p>'; });
+        g.selectAll('.map-dot').data(locations).enter().append('circle')
+          .attr('class', 'map-dot')
+          .attr('cx', function (d) { return projection([d.lng, d.lat])[0]; })
+          .attr('cy', function (d) { return projection([d.lng, d.lat])[1]; })
+          .attr('r', function (d) { return rScale(d.count); })
+          .on('mouseenter', function (event, d) {
+            tooltip.style.display = 'block';
+            tooltip.textContent = d.city + (d.city && d.country ? ', ' : '') + d.country + ' — ' + d.count + ' visit' + (d.count > 1 ? 's' : '');
+          })
+          .on('mousemove', function (event) {
+            tooltip.style.left = (event.offsetX + 12) + 'px';
+            tooltip.style.top = (event.offsetY - 10) + 'px';
+          })
+          .on('mouseleave', function () { tooltip.style.display = 'none'; });
+      }
+    }).catch(function (err) {
+      console.error('Map load error:', err);
+      container.innerHTML = '<p class="ref-empty">Could not load map data. Check console for details.</p>';
+    });
   }
 
   // ── Visitor Log ──
