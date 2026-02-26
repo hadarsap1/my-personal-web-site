@@ -412,6 +412,8 @@
     // Zoom behavior
     var zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', function (event) {
       g.attr('transform', event.transform);
+      g.selectAll('.map-dot').attr('r', function (d) { return (d._r || 2) / event.transform.k; })
+        .attr('stroke-width', function () { return 2 / event.transform.k; });
     });
     svg.call(zoom);
 
@@ -455,7 +457,8 @@
           .attr('class', 'map-dot')
           .attr('cx', function (d) { return projection([d.lng, d.lat])[0]; })
           .attr('cy', function (d) { return projection([d.lng, d.lat])[1]; })
-          .attr('r', function (d) { return rScale(d.count); })
+          .each(function (d) { d._r = rScale(d.count); })
+          .attr('r', function (d) { return d._r; })
           .on('mouseenter', function (event, d) {
             tooltip.style.display = 'block';
             tooltip.textContent = d.city + (d.city && d.country ? ', ' : '') + d.country + ' — ' + d.count + ' visit' + (d.count > 1 ? 's' : '');
