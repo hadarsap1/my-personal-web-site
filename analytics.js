@@ -44,9 +44,22 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Try ipapi.co first, fall back to ip-api.com
+  // Try ipwho.is first (HTTPS, free), fall back to ipapi.co
   async function fetchGeo() {
-    // Attempt 1: ipapi.co
+    // Attempt 1: ipwho.is (HTTPS, no key, generous limits)
+    try {
+      const r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
+      if (r.ok) {
+        const g = await r.json();
+        if (g.success !== false && g.country) return {
+          country: g.country, countryCode: g.country_code, city: g.city,
+          region: g.region, lat: g.latitude, lng: g.longitude, org: g.connection && g.connection.org || null,
+          tz: g.timezone && g.timezone.id || null, ip: g.ip
+        };
+      }
+    } catch (_) {}
+
+    // Attempt 2: ipapi.co (HTTPS, 1000/day free)
     try {
       const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
       if (r.ok) {
@@ -55,19 +68,6 @@
           country: g.country_name, countryCode: g.country_code, city: g.city,
           region: g.region, lat: g.latitude, lng: g.longitude, org: g.org,
           tz: g.timezone, ip: g.ip
-        };
-      }
-    } catch (_) {}
-
-    // Attempt 2: ip-api.com (free, no key needed, http only)
-    try {
-      const r = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,regionName,city,lat,lon,timezone,isp,query', { signal: AbortSignal.timeout(4000) });
-      if (r.ok) {
-        const g = await r.json();
-        if (g.status === 'success') return {
-          country: g.country, countryCode: g.countryCode, city: g.city,
-          region: g.regionName, lat: g.lat, lng: g.lon, org: g.isp,
-          tz: g.timezone, ip: g.query
         };
       }
     } catch (_) {}
