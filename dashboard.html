@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   <style>
     /* ===== Dashboard Layout ===== */
     .dash-wrap { max-width: var(--max-width); margin: 0 auto; padding: 6rem 2rem 3rem; }
@@ -41,7 +42,7 @@
     .time-btn:hover { border-color: var(--color-border-hover); color: var(--color-text-secondary); }
     .time-btn.active { background: rgba(59, 130, 246, 0.15); border-color: var(--color-primary); color: var(--color-primary); }
 
-    /* ===== Referrers List ===== */
+    /* ===== Referrers / Generic List ===== */
     .ref-list { list-style: none; }
     .ref-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--color-border); font-size: 0.85rem; }
     .ref-item:last-child { border-bottom: none; }
@@ -62,6 +63,24 @@
     .donut-value { fill: var(--color-text-muted); font-size: 11px; }
     .hist-bar { fill: var(--color-primary); rx: 3; }
     .hist-label { fill: var(--color-text-muted); font-size: 11px; }
+
+    /* ===== Visitor Map ===== */
+    .map-land { fill: #1e293b; stroke: rgba(255,255,255,0.08); stroke-width: 0.5; }
+    .map-dot { fill: var(--color-primary); opacity: 0.7; stroke: rgba(59,130,246,0.3); stroke-width: 2; }
+    .map-tooltip { position: absolute; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; font-size: 0.75rem; color: var(--color-text-secondary); pointer-events: none; z-index: 10; white-space: nowrap; display: none; }
+
+    /* ===== Visitor Log Table ===== */
+    .visitor-log-wrap { max-height: 480px; overflow-y: auto; overflow-x: auto; }
+    .visitor-log { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 900px; }
+    .visitor-log th { text-align: left; padding: 0.6rem 0.75rem; color: var(--color-text-muted); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--color-border); position: sticky; top: 0; background: var(--color-card); z-index: 1; }
+    .visitor-log td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); }
+    .visitor-log tr:hover td { background: rgba(59, 130, 246, 0.04); }
+    .visitor-log .vl-time { color: var(--color-text-muted); white-space: nowrap; }
+    .visitor-log .vl-location { color: var(--color-text); font-weight: 500; }
+    .visitor-log .vl-org { color: var(--color-text-faint); font-size: 0.75rem; }
+    .visitor-log .vl-tag { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; background: rgba(59, 130, 246, 0.1); color: var(--color-primary); }
+    .visitor-log .vl-tag.returning { background: rgba(34, 211, 238, 0.1); color: var(--color-cyan); }
+    .visitor-log .vl-ref { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* ===== Password Gate ===== */
     .gate-overlay { position: fixed; inset: 0; z-index: 200; background: var(--color-bg); display: flex; align-items: center; justify-content: center; }
@@ -111,16 +130,32 @@
     <p>Visitor data for hadarsapir.com</p>
   </div>
 
-  <!-- KPI Cards -->
+  <!-- KPI Cards — row 1 -->
   <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-label">Total Visitors</div><div class="kpi-value" id="kpi-total">—</div></div>
-    <div class="kpi-card"><div class="kpi-label">Today's Visitors</div><div class="kpi-value" id="kpi-today">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Total Visits</div><div class="kpi-value" id="kpi-total">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-unique">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Today</div><div class="kpi-value" id="kpi-today">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Returning</div><div class="kpi-value" id="kpi-returning">—</div></div>
+  </div>
+  <!-- KPI Cards — row 2 -->
+  <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-label">Avg Time on Page</div><div class="kpi-value" id="kpi-time">—</div></div>
     <div class="kpi-card"><div class="kpi-label">Top Country</div><div class="kpi-value" id="kpi-country">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Top City</div><div class="kpi-value" id="kpi-city">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">Top ISP / Org</div><div class="kpi-value" id="kpi-org" style="font-size:1.1rem;">—</div></div>
   </div>
 
   <!-- Charts -->
   <div class="charts-grid">
+
+    <!-- Visitor Map -->
+    <div class="chart-card full" style="position:relative; overflow:hidden;">
+      <div class="chart-title">Visitor Locations</div>
+      <div id="chart-map"></div>
+      <div class="map-tooltip" id="map-tooltip"></div>
+    </div>
+
+    <!-- Visitors Over Time -->
     <div class="chart-card full">
       <div class="chart-title">Visitors Over Time</div>
       <div class="time-toggle" id="time-toggle">
@@ -132,14 +167,49 @@
       <div id="chart-timeline"></div>
     </div>
 
+    <!-- Recent Visitors Log -->
+    <div class="chart-card full">
+      <div class="chart-title">Recent Visitors</div>
+      <div class="visitor-log-wrap">
+        <table class="visitor-log" id="visitor-log">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Location</th>
+              <th>ISP / Org</th>
+              <th>Device</th>
+              <th>Browser</th>
+              <th>OS</th>
+              <th>Screen</th>
+              <th>Language</th>
+              <th>Referrer</th>
+              <th>Duration</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="chart-card">
       <div class="chart-title">Visitors by Country</div>
       <div id="chart-countries"></div>
     </div>
 
     <div class="chart-card">
+      <div class="chart-title">Visitors by City</div>
+      <div id="chart-cities"></div>
+    </div>
+
+    <div class="chart-card">
       <div class="chart-title">Top Referrers</div>
       <div id="chart-referrers"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">ISP / Organization</div>
+      <div id="chart-orgs"></div>
     </div>
 
     <div class="chart-card">
@@ -152,6 +222,26 @@
       <div id="chart-browsers"></div>
     </div>
 
+    <div class="chart-card">
+      <div class="chart-title">Operating System</div>
+      <div id="chart-os"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Screen Resolution</div>
+      <div id="chart-screens"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Language</div>
+      <div id="chart-languages"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Timezone</div>
+      <div id="chart-timezones"></div>
+    </div>
+
     <div class="chart-card full">
       <div class="chart-title">Time Spent Distribution</div>
       <div id="chart-timespent"></div>
@@ -162,17 +252,17 @@
 <script>
 (function () {
   // ── Config ──
-  const SUPABASE_URL = 'https://cbkuupjmemimbfuahizn.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNia3V1cGptZW1pbWJmdWFoaXpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTkyNjEsImV4cCI6MjA4NzUzNTI2MX0.q4BDFj5KN25_FmI2yofH9SBDsFcep9GKZ_VL3UMJLb0';
-  const HASH = 'e001dad6f306c7ddb4c0662753355f15214ca8f3cfa19f8c215530c3ac7a3764';
-  const COLORS = ['#3b82f6','#22d3ee','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#6366f1'];
+  var SUPABASE_URL = 'https://cbkuupjmemimbfuahizn.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNia3V1cGptZW1pbWJmdWFoaXpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTkyNjEsImV4cCI6MjA4NzUzNTI2MX0.q4BDFj5KN25_FmI2yofH9SBDsFcep9GKZ_VL3UMJLb0';
+  var HASH = 'e001dad6f306c7ddb4c0662753355f15214ca8f3cfa19f8c215530c3ac7a3764';
+  var COLORS = ['#3b82f6','#22d3ee','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#6366f1'];
 
-  let allVisits = [];
+  var allVisits = [];
 
   // ── Password Gate ──
   async function sha256(text) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
   }
 
   if (sessionStorage.getItem('dash_auth') === 'ok') {
@@ -183,8 +273,8 @@
 
   document.getElementById('gate-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    const input = document.getElementById('gate-input');
-    const hash = await sha256(input.value);
+    var input = document.getElementById('gate-input');
+    var hash = await sha256(input.value);
     if (hash === HASH) {
       sessionStorage.setItem('dash_auth', 'ok');
       document.getElementById('gate').style.display = 'none';
@@ -203,16 +293,24 @@
       document.getElementById('dashboard').innerHTML = '<div class="dash-loading">Configure SUPABASE_URL and SUPABASE_KEY in dashboard.html and analytics.js to see data.</div>';
       return;
     }
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const { data, error } = await sb.from('visits').select('*').order('visited_at', { ascending: false }).limit(10000);
-    if (error || !data) { document.getElementById('dashboard').innerHTML = '<div class="dash-loading">Error loading data.</div>'; return; }
-    allVisits = data;
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    var result = await sb.from('visits').select('*').order('visited_at', { ascending: false }).limit(10000);
+    if (result.error || !result.data) { document.getElementById('dashboard').innerHTML = '<div class="dash-loading">Error loading data.</div>'; return; }
+    allVisits = result.data;
     renderKPIs();
     renderTimeline(7);
+    renderVisitorMap();
+    renderVisitorLog();
     renderCountries();
+    renderBarList('chart-cities', groupBy('city'));
     renderReferrers();
+    renderBarList('chart-orgs', groupBy('org'));
     renderDonut('chart-devices', groupBy('device_type'));
     renderDonut('chart-browsers', groupBy('browser'));
+    renderDonut('chart-os', groupBy('os'));
+    renderBarList('chart-screens', groupBy('screen_resolution'));
+    renderBarList('chart-languages', groupBy('language'));
+    renderBarList('chart-timezones', groupBy('timezone'));
     renderTimeSpent();
     bindTimeToggle();
   }
@@ -226,13 +324,50 @@
 
   function todayStr() { return new Date().toISOString().slice(0, 10); }
 
+  function escHtml(str) {
+    var d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+  }
+
+  function formatTime(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function formatDuration(s) {
+    if (!s || s <= 0) return '—';
+    if (s < 60) return s + 's';
+    return Math.floor(s / 60) + 'm ' + (s % 60) + 's';
+  }
+
   // ── KPIs ──
   function renderKPIs() {
     document.getElementById('kpi-total').textContent = allVisits.length.toLocaleString();
+
+    // Unique visitors by ip_hash
+    var hashes = {};
+    allVisits.forEach(function (v) { if (v.ip_hash) hashes[v.ip_hash] = true; });
+    var uniqueCount = Object.keys(hashes).length;
+    document.getElementById('kpi-unique').textContent = uniqueCount ? uniqueCount.toLocaleString() : '—';
+
+    // Today
     var today = todayStr();
     var todayCount = allVisits.filter(function (v) { return v.visited_at && v.visited_at.slice(0, 10) === today; }).length;
     document.getElementById('kpi-today').textContent = todayCount.toLocaleString();
 
+    // Returning visitors
+    var hashCounts = {};
+    allVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
+    var returning = Object.values(hashCounts).filter(function (c) { return c > 1; }).length;
+    if (uniqueCount > 0) {
+      document.getElementById('kpi-returning').innerHTML = returning + '<span class="kpi-unit"> (' + Math.round(returning / uniqueCount * 100) + '%)</span>';
+    } else {
+      document.getElementById('kpi-returning').textContent = '—';
+    }
+
+    // Avg time
     var times = allVisits.map(function (v) { return v.time_spent_s || 0; }).filter(function (t) { return t > 0; });
     if (times.length) {
       var avg = Math.round(times.reduce(function (a, b) { return a + b; }, 0) / times.length);
@@ -241,8 +376,96 @@
       document.getElementById('kpi-time').textContent = '—';
     }
 
+    // Top country, city, org
     var countries = groupBy('country');
     document.getElementById('kpi-country').textContent = countries.length ? countries[0][0] : '—';
+    var cities = groupBy('city');
+    document.getElementById('kpi-city').textContent = cities.length ? cities[0][0] : '—';
+    var orgs = groupBy('org');
+    document.getElementById('kpi-org').textContent = orgs.length ? orgs[0][0] : '—';
+  }
+
+  // ── Visitor Map (D3 + TopoJSON) ──
+  function renderVisitorMap() {
+    var container = document.getElementById('chart-map');
+    container.innerHTML = '';
+    var tooltip = document.getElementById('map-tooltip');
+
+    var width = container.clientWidth;
+    var height = Math.min(width * 0.5, 400);
+
+    var svg = d3.select(container).append('svg').attr('width', width).attr('height', height);
+    var projection = d3.geoNaturalEarth1().scale(width / 5.5).translate([width / 2, height / 2]);
+    var path = d3.geoPath().projection(projection);
+
+    // Load world map
+    d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function (world) {
+      var countries = topojson.feature(world, world.objects.countries);
+      svg.selectAll('.map-land').data(countries.features).enter().append('path').attr('class', 'map-land').attr('d', path);
+
+      // Plot visitor dots — aggregate by location
+      var locMap = {};
+      allVisits.forEach(function (v) {
+        if (!v.latitude || !v.longitude) return;
+        var key = v.latitude.toFixed(2) + ',' + v.longitude.toFixed(2);
+        if (!locMap[key]) locMap[key] = { lat: v.latitude, lng: v.longitude, city: v.city || '', country: v.country || '', count: 0 };
+        locMap[key].count++;
+      });
+      var locations = Object.values(locMap);
+
+      var rScale = d3.scaleSqrt().domain([1, d3.max(locations, function (d) { return d.count; }) || 1]).range([3, 14]);
+
+      svg.selectAll('.map-dot').data(locations).enter().append('circle')
+        .attr('class', 'map-dot')
+        .attr('cx', function (d) { return projection([d.lng, d.lat])[0]; })
+        .attr('cy', function (d) { return projection([d.lng, d.lat])[1]; })
+        .attr('r', function (d) { return rScale(d.count); })
+        .on('mouseenter', function (event, d) {
+          tooltip.style.display = 'block';
+          tooltip.textContent = d.city + (d.city && d.country ? ', ' : '') + d.country + ' — ' + d.count + ' visit' + (d.count > 1 ? 's' : '');
+        })
+        .on('mousemove', function (event) {
+          tooltip.style.left = (event.offsetX + 12) + 'px';
+          tooltip.style.top = (event.offsetY - 10) + 'px';
+        })
+        .on('mouseleave', function () { tooltip.style.display = 'none'; });
+    });
+  }
+
+  // ── Visitor Log ──
+  function renderVisitorLog() {
+    var tbody = document.querySelector('#visitor-log tbody');
+    tbody.innerHTML = '';
+
+    // Count visits per ip_hash for returning detection
+    var hashCounts = {};
+    allVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
+
+    // Show most recent 100
+    var recent = allVisits.slice(0, 100);
+    recent.forEach(function (v) {
+      var location = [v.city, v.region, v.country].filter(Boolean).join(', ');
+      var ref = '';
+      if (v.referrer) {
+        try { ref = new URL(v.referrer).hostname.replace('www.', ''); } catch (_) { ref = v.referrer; }
+      }
+      var isReturning = v.ip_hash && hashCounts[v.ip_hash] > 1;
+
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="vl-time">' + escHtml(formatTime(v.visited_at)) + '</td>' +
+        '<td class="vl-location">' + escHtml(location || 'Unknown') + '</td>' +
+        '<td class="vl-org">' + escHtml(v.org || '—') + '</td>' +
+        '<td>' + escHtml(v.device_type || '—') + '</td>' +
+        '<td>' + escHtml(v.browser || '—') + '</td>' +
+        '<td>' + escHtml(v.os || '—') + '</td>' +
+        '<td>' + escHtml(v.screen_resolution || '—') + '</td>' +
+        '<td>' + escHtml(v.language || '—') + '</td>' +
+        '<td class="vl-ref" title="' + escHtml(v.referrer || '') + '">' + escHtml(ref || 'Direct') + '</td>' +
+        '<td>' + formatDuration(v.time_spent_s) + '</td>' +
+        '<td>' + (isReturning ? '<span class="vl-tag returning">Returning</span>' : '<span class="vl-tag">New</span>') + '</td>';
+      tbody.appendChild(tr);
+    });
   }
 
   // ── Timeline (Area Chart) ──
@@ -253,14 +476,12 @@
     var cutoff = days === 'all' ? null : new Date(now.getTime() - days * 86400000);
     var filtered = cutoff ? allVisits.filter(function (v) { return new Date(v.visited_at) >= cutoff; }) : allVisits;
 
-    // Group by date
     var byDate = {};
     filtered.forEach(function (v) {
       var d = v.visited_at.slice(0, 10);
       byDate[d] = (byDate[d] || 0) + 1;
     });
 
-    // Fill gaps
     var dates = Object.keys(byDate).sort();
     if (!dates.length) { container.innerHTML = '<p class="ref-empty">No data for this period.</p>'; return; }
     var start = new Date(dates[0]), end = new Date(dates[dates.length - 1]);
@@ -306,9 +527,12 @@
 
   // ── Countries (Horizontal Bar) ──
   function renderCountries() {
-    var container = document.getElementById('chart-countries');
+    renderHBar('chart-countries', groupBy('country').slice(0, 10));
+  }
+
+  function renderHBar(containerId, data) {
+    var container = document.getElementById(containerId);
     container.innerHTML = '';
-    var data = groupBy('country').slice(0, 10);
     if (!data.length) { container.innerHTML = '<p class="ref-empty">No data yet.</p>'; return; }
 
     var margin = { top: 5, right: 40, bottom: 5, left: 100 };
@@ -326,6 +550,24 @@
     svg.selectAll('.bar-label').data(data).enter().append('text').attr('class', 'bar-label').attr('x', -8).attr('y', function (d) { return y(d[0]) + y.bandwidth() / 2; }).attr('dy', '0.35em').attr('text-anchor', 'end').text(function (d) { return d[0]; });
 
     svg.selectAll('.bar-value').data(data).enter().append('text').attr('class', 'bar-value').attr('x', function (d) { return x(d[1]) + 6; }).attr('y', function (d) { return y(d[0]) + y.bandwidth() / 2; }).attr('dy', '0.35em').text(function (d) { return d[1]; });
+  }
+
+  // ── Bar List (simple ranked list for smaller datasets) ──
+  function renderBarList(containerId, data) {
+    var container = document.getElementById(containerId);
+    container.innerHTML = '';
+    var top = data.slice(0, 10);
+    if (!top.length) { container.innerHTML = '<p class="ref-empty">No data yet.</p>'; return; }
+
+    var ul = document.createElement('ul');
+    ul.className = 'ref-list';
+    top.forEach(function (r) {
+      var li = document.createElement('li');
+      li.className = 'ref-item';
+      li.innerHTML = '<span class="ref-name">' + escHtml(r[0]) + '</span><span class="ref-count">' + r[1] + '</span>';
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
   }
 
   // ── Donut Chart ──
@@ -346,11 +588,9 @@
 
     svg.selectAll('path').data(pie(data)).enter().append('path').attr('d', arc).attr('fill', function (d, i) { return COLORS[i % COLORS.length]; }).attr('stroke', '#111827').attr('stroke-width', 2);
 
-    // Center total
     svg.append('text').attr('text-anchor', 'middle').attr('dy', '-0.1em').attr('fill', '#fff').attr('font-size', '1.5rem').attr('font-weight', '700').text(total);
     svg.append('text').attr('text-anchor', 'middle').attr('dy', '1.2em').attr('fill', '#9ca3af').attr('font-size', '0.7rem').text('total');
 
-    // Legend below
     var legend = d3.select(container).select('svg').append('g').attr('transform', 'translate(10,' + (size + 10) + ')');
     data.forEach(function (d, i) {
       var g = legend.append('g').attr('transform', 'translate(0,' + (i * 20) + ')');
@@ -379,13 +619,13 @@
     sorted.forEach(function (r) {
       var li = document.createElement('li');
       li.className = 'ref-item';
-      li.innerHTML = '<span class="ref-name">' + r[0] + '</span><span class="ref-count">' + r[1] + '</span>';
+      li.innerHTML = '<span class="ref-name">' + escHtml(r[0]) + '</span><span class="ref-count">' + r[1] + '</span>';
       ul.appendChild(li);
     });
     container.appendChild(ul);
   }
 
-  // ── Time Spent Distribution (Histogram) ──
+  // ── Time Spent Distribution ──
   function renderTimeSpent() {
     var container = document.getElementById('chart-timespent');
     container.innerHTML = '';
