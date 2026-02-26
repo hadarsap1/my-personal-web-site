@@ -256,8 +256,8 @@ function resetMapView() {
   document.querySelectorAll('.location-item').forEach((item) => item.classList.remove('active'));
 }
 
-// Wire reset button
-const resetBtn = document.querySelector('.map-reset-btn');
+// Wire reset button (inside map-container)
+const resetBtn = document.querySelector('#map-container button');
 if (resetBtn) resetBtn.addEventListener('click', resetMapView);
 
 function buildSidebar() {
@@ -306,26 +306,23 @@ const observer = new IntersectionObserver(
   { threshold: 0.1 }
 );
 
-document.querySelectorAll('.card, .section-heading, .section-badge, .section-sub, .adventure-card, .contact-container').forEach((el) => {
-  if (el.classList.contains('map-card')) return;
+// Animate bento cards on scroll — stagger-1 through stagger-7 defined in style.css
+document.querySelectorAll('.bento-card').forEach((el, i) => {
   el.classList.add('fade-in');
+  const staggerIndex = (i % 7) + 1; // cycles 1–7 across all cards
+  el.classList.add(`stagger-${staggerIndex}`);
   observer.observe(el);
 });
 
-// Stagger bento grid cards
-document.querySelectorAll('.hero-grid > .card, .hero-grid > .card-stat').forEach((el, i) => {
-  el.classList.add(`stagger-${Math.min(i, 7)}`);
-});
-
 // Active nav state
-const navLinksAll = document.querySelectorAll('.nav-links a[href^="#"]');
-const sections = document.querySelectorAll('.section, .hero, .contact-section');
+const navLinksAll = document.querySelectorAll('.nav-link, .mobile-nav-link');
+const sections = document.querySelectorAll('section[id]');
 const navObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const id = entry.target.getAttribute('id');
-        navLinksAll.forEach((link) => {
+        document.querySelectorAll('.nav-link').forEach((link) => {
           const isActive = link.getAttribute('href') === `#${id}`;
           link.classList.toggle('nav-active', isActive);
           if (isActive) {
@@ -339,15 +336,20 @@ const navObserver = new IntersectionObserver(
   },
   { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' }
 );
-sections.forEach((section) => {
-  if (section.id) navObserver.observe(section);
-});
+sections.forEach((section) => navObserver.observe(section));
 
-// Mobile menu elements (declared early for reuse in scroll handler)
-const mobileToggle = document.querySelector('.mobile-toggle');
-const navLinks = document.querySelector('.nav-links');
+// Mobile menu
+const mobileToggle = document.getElementById('mobile-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
 
-// Smooth scroll nav
+if (mobileToggle && mobileMenu) {
+  mobileToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('hidden') === false;
+    mobileToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+}
+
+// Smooth scroll + close mobile menu
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', (e) => {
     const href = anchor.getAttribute('href');
@@ -359,36 +361,12 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       const target = document.querySelector(href);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    // Close mobile menu if open
-    if (navLinks && navLinks.classList.contains('mobile-open')) {
-      navLinks.classList.remove('mobile-open');
+    // Close mobile menu
+    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+      mobileMenu.classList.add('hidden');
       if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
     }
   });
-});
-
-// Mobile menu (mobileToggle/navLinks declared above smooth scroll for reuse)
-if (mobileToggle) {
-  mobileToggle.setAttribute('aria-expanded', 'false');
-  mobileToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('mobile-open');
-    mobileToggle.setAttribute('aria-expanded', String(isOpen));
-  });
-}
-
-// Navbar scroll (throttled with rAF)
-const navbar = document.querySelector('.navbar');
-let scrollTicking = false;
-window.addEventListener('scroll', () => {
-  if (!scrollTicking) {
-    requestAnimationFrame(() => {
-      navbar.style.background = window.scrollY > 50
-        ? 'rgba(10, 14, 26, 0.95)'
-        : 'rgba(10, 14, 26, 0.8)';
-      scrollTicking = false;
-    });
-    scrollTicking = true;
-  }
 });
 
 // Init map when travel section is visible
