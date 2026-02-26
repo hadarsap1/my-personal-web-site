@@ -437,12 +437,15 @@
       // Plot visitor dots — aggregate by location
       var locMap = {};
       allVisits.forEach(function (v) {
-        if (!v.latitude || !v.longitude) return;
-        var key = v.latitude.toFixed(2) + ',' + v.longitude.toFixed(2);
-        if (!locMap[key]) locMap[key] = { lat: v.latitude, lng: v.longitude, city: v.city || '', country: v.country || '', count: 0 };
+        var lat = parseFloat(v.latitude);
+        var lng = parseFloat(v.longitude);
+        if (isNaN(lat) || isNaN(lng)) return;
+        var key = lat.toFixed(2) + ',' + lng.toFixed(2);
+        if (!locMap[key]) locMap[key] = { lat: lat, lng: lng, city: v.city || '', country: v.country || '', count: 0 };
         locMap[key].count++;
       });
       var locations = Object.values(locMap);
+      console.log('[Map] Visits with coords:', allVisits.filter(function(v){ return v.latitude && v.longitude; }).length, '| Unique locations:', locations.length);
 
       if (locations.length) {
         var rScale = d3.scaleSqrt().domain([1, d3.max(locations, function (d) { return d.count; }) || 1]).range([4, 16]);
