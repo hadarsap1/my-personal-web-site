@@ -306,10 +306,10 @@ const observer = new IntersectionObserver(
   { threshold: 0.1 }
 );
 
-// Animate bento cards on scroll — stagger-1 through stagger-7 defined in style.css
+// Animate bento cards on scroll - stagger-1 through stagger-7 defined in style.css
 document.querySelectorAll('.bento-card').forEach((el, i) => {
   el.classList.add('fade-in');
-  const staggerIndex = (i % 7) + 1; // cycles 1–7 across all cards
+  const staggerIndex = (i % 7) + 1; // cycles 1-7 across all cards
   el.classList.add(`stagger-${staggerIndex}`);
   observer.observe(el);
 });

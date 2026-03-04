@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HADAR SAPIR — Personal Site
+   HADAR SAPIR - Personal Site
    Custom CSS: layout primitives, card variants, animations, D3 map, a11y
    All color / spacing defaults handled by Tailwind.
    ========================================================================== */
@@ -31,7 +31,7 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Dark card — used for CTA and contact block */
+/* Dark card - used for CTA and contact block */
 .bento-card.bento-card-dark {
   background: #111827;
   backdrop-filter: none;
@@ -48,7 +48,7 @@
     0 2px 8px rgb(0 0 0 / 0.2);
 }
 
-/* Accent-tinted card — for the mission pull quote */
+/* Accent-tinted card - for the mission pull quote */
 .bento-card.bento-card-accent {
   background: rgba(240, 253, 250, 0.8);
   border-color: #99f6e4;
@@ -58,13 +58,13 @@
   border-color: #5eead4;
 }
 
-/* Mission primary card — warm, distinct from work cards */
+/* Mission primary card - warm, distinct from work cards */
 .mission-card-primary.bento-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 253, 250, 0.5) 100%);
   border-color: rgba(153, 246, 228, 0.4);
 }
 
-/* Photo block — structural, subtle depth */
+/* Photo block - structural, subtle depth */
 .photo-block {
   border-radius: 20px;
   overflow: hidden;
@@ -92,7 +92,7 @@
   background-clip: text;
 }
 
-/* Fact rows in hero — number + label side by side */
+/* Fact rows in hero - number + label side by side */
 .fact-row {
   display: flex;
   align-items: baseline;
@@ -139,21 +139,21 @@
   letter-spacing: 0.01em;
 }
 
-/* Neutral/secondary chips — minimalist */
+/* Neutral/secondary chips - minimalist */
 .chip-default {
   background: rgba(243, 244, 246, 0.5);
   color: #6b7280;
   border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
-/* Core superpowers — subtle blue tint */
+/* Core superpowers - subtle blue tint */
 .chip-blue {
   background: #f0fdfa;
   color: #0f766e;
   border: 1px solid #ccfbf1;
 }
 
-/* Legacy green — kept for compatibility, now maps to blue */
+/* Legacy green - kept for compatibility, now maps to blue */
 .chip-amber {
   background: #f0fdfa;
   color: #0f766e;
@@ -297,7 +297,7 @@
   width: 100%;
   height: clamp(240px, 40vw, 520px);
   overflow: hidden;
-  /* No border-radius — it's meant to break the page rhythm */
+  /* No border-radius - it's meant to break the page rhythm */
 }
 
 .adventure-img {
@@ -375,7 +375,7 @@
   transform: translateY(0);
 }
 
-/* Stagger delays — used by script.js cycling 1–7 */
+/* Stagger delays - used by script.js cycling 1-7 */
 .fade-in.stagger-1 { transition-delay: 0.06s; }
 .fade-in.stagger-2 { transition-delay: 0.12s; }
 .fade-in.stagger-3 { transition-delay: 0.18s; }
@@ -386,7 +386,7 @@
 
 
 /* ==========================================================================
-   D3 MAP STYLES (dark card context — #0a0e1a background)
+   D3 MAP STYLES (dark card context - #0a0e1a background)
    ========================================================================== */
 
 #map-container {

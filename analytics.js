@@ -1,4 +1,4 @@
-/* Analytics — lightweight visitor tracking via Supabase */
+/* Analytics - lightweight visitor tracking via Supabase */
 (function () {
   // ── Config ──────────────────────────────────────────────
   const SUPABASE_URL = 'https://cbkuupjmemimbfuahizn.supabase.co';
@@ -80,7 +80,7 @@
     try {
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      // Fetch geo — IP is hashed (SHA-256) for returning-visitor detection, never stored raw
+      // Fetch geo - IP is hashed (SHA-256) for returning-visitor detection, never stored raw
       let country = null, countryCode = null, city = null;
       let region = null, latitude = null, longitude = null, org = null, tz = null, ipHash = null;
 
