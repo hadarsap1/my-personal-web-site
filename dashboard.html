@@ -442,22 +442,36 @@
 
   // ── Detect current visitor's IP hash ──
   async function detectMyIp() {
+    var ip = null;
+    // Try ipwho.is first
     try {
       var r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
-      if (r.ok) {
-        var g = await r.json();
-        if (g.ip) {
-          var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(g.ip));
-          myIpHash = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-          // Update button to show status
-          var btn = document.getElementById('block-my-ip');
-          if (blockedHashes.indexOf(myIpHash) !== -1) {
-            btn.classList.add('active');
-            btn.textContent = 'My IP Excluded ✓';
-          }
-        }
-      }
+      if (r.ok) { var g = await r.json(); if (g.ip) ip = g.ip; }
     } catch (_) {}
+    // Fallback to ipapi.co
+    if (!ip) {
+      try {
+        var r2 = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+        if (r2.ok) { var g2 = await r2.json(); if (g2.ip) ip = g2.ip; }
+      } catch (_) {}
+    }
+    // Fallback to api.ipify.org (minimal, just returns IP)
+    if (!ip) {
+      try {
+        var r3 = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(4000) });
+        if (r3.ok) { var g3 = await r3.json(); if (g3.ip) ip = g3.ip; }
+      } catch (_) {}
+    }
+
+    if (ip) {
+      var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip));
+      myIpHash = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      var btn = document.getElementById('block-my-ip');
+      if (blockedHashes.indexOf(myIpHash) !== -1) {
+        btn.classList.add('active');
+        btn.textContent = 'My IP Excluded ✓';
+      }
+    }
   }
 
   function saveBlockedHashes() {
@@ -481,7 +495,7 @@
 
   function bindBlockIp() {
     document.getElementById('block-my-ip').addEventListener('click', function () {
-      if (!myIpHash) { alert('Could not detect your IP. Try refreshing.'); return; }
+      if (!myIpHash) { document.getElementById('filter-info').textContent = 'IP detection failed - disable ad blocker and refresh'; return; }
       var idx = blockedHashes.indexOf(myIpHash);
       if (idx === -1) {
         blockedHashes.push(myIpHash);
