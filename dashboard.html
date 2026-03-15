@@ -130,6 +130,39 @@
     /* ===== Loading ===== */
     .dash-loading { text-align: center; padding: 4rem; color: var(--color-text-muted); font-size: 0.9rem; }
 
+    /* ===== Date Reset Filter ===== */
+    .filter-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-bar label { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
+    .filter-date { padding: 0.4rem 0.6rem; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text); font-size: 0.8rem; font-family: inherit; outline: none; transition: border-color var(--transition-fast); }
+    .filter-date:focus { border-color: var(--color-primary); }
+    .filter-btn { padding: 0.4rem 0.85rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: transparent; color: var(--color-text-muted); font-size: 0.8rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all var(--transition-fast); }
+    .filter-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .filter-btn.active { background: rgba(59, 130, 246, 0.15); border-color: var(--color-primary); color: var(--color-primary); }
+    .filter-info { font-size: 0.75rem; color: var(--color-text-faint); }
+    .filter-sep { width: 1px; height: 24px; background: var(--color-border); }
+    .filter-btn.danger { color: #ef4444; border-color: rgba(239,68,68,0.3); }
+    .filter-btn.danger:hover { border-color: #ef4444; }
+    .filter-btn.danger.active { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #ef4444; }
+    .blocked-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .blocked-tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 4px; font-size: 0.7rem; color: #ef4444; font-family: monospace; }
+    .blocked-tag button { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem; padding: 0; line-height: 1; }
+
+    /* ===== Heatmap ===== */
+    .heatmap-cell { stroke: var(--color-bg); stroke-width: 1; rx: 2; }
+    .heatmap-label { fill: var(--color-text-faint); font-size: 10px; }
+
+    /* ===== Visitor Profiles ===== */
+    .profile-list { list-style: none; }
+    .profile-item { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
+    .profile-item:last-child { border-bottom: none; }
+    .profile-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+    .profile-hash { font-family: monospace; font-size: 0.75rem; color: var(--color-text-muted); }
+    .profile-visits { font-size: 0.8rem; font-weight: 600; color: var(--color-primary); }
+    .profile-meta { font-size: 0.75rem; color: var(--color-text-faint); }
+    .profile-meta span { margin-right: 0.75rem; }
+    .engagement-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); margin-top: 0.3rem; overflow: hidden; }
+    .engagement-fill { height: 100%; border-radius: 3px; background: var(--color-primary); }
+
     /* ===== Responsive ===== */
     @media (max-width: 1024px) {
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
@@ -161,6 +194,25 @@
     <a href="index.html" class="dash-back">&larr; Back to site</a>
     <h1>Analytics</h1>
     <p>Visitor data for hadarsapir.com</p>
+  </div>
+
+  <!-- Filters & IP Exclusion -->
+  <div style="background:var(--color-card); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; margin-bottom:1.5rem;">
+    <div class="filter-bar" id="filter-bar" style="margin-bottom:0.75rem;">
+      <label>View data from:</label>
+      <input type="date" class="filter-date" id="filter-date">
+      <button class="filter-btn" id="filter-apply">Apply</button>
+      <button class="filter-btn" id="filter-clear">Show All</button>
+      <span class="filter-info" id="filter-info"></span>
+    </div>
+    <div class="filter-bar" style="margin-bottom:0;">
+      <label>My traffic:</label>
+      <button class="filter-btn danger" id="block-my-ip" title="Exclude your current IP from all dashboard views">⛔ Exclude My IP</button>
+      <button class="filter-btn" id="toggle-blocked" title="Show/hide blocked IP list">Blocked IPs</button>
+    </div>
+    <div id="blocked-ips-panel" style="display:none; margin-top:0.75rem;">
+      <div class="blocked-list" id="blocked-list"></div>
+    </div>
   </div>
 
   <!-- KPI Cards — row 1 -->
@@ -279,6 +331,52 @@
       <div class="chart-title">Time Spent Distribution</div>
       <div id="chart-timespent"></div>
     </div>
+
+    <!-- New: Engagement & Identification Charts -->
+    <div class="chart-card full">
+      <div class="chart-title">Visit Heatmap (Day &times; Hour)</div>
+      <div id="chart-heatmap"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Scroll Depth Distribution</div>
+      <div id="chart-scroll"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Engagement Score</div>
+      <div id="chart-engagement"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">UTM Sources</div>
+      <div id="chart-utm-source"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">UTM Campaigns</div>
+      <div id="chart-utm-campaign"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Connection Type</div>
+      <div id="chart-connection"></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Viewport Size</div>
+      <div id="chart-viewport"></div>
+    </div>
+
+    <div class="chart-card full">
+      <div class="chart-title">Returning Visitor Profiles (Top 20)</div>
+      <div id="chart-profiles"></div>
+    </div>
+
+    <div class="chart-card full">
+      <div class="chart-title">Visit Hour Distribution</div>
+      <div id="chart-hours"></div>
+    </div>
   </div>
 </div>
 
@@ -291,6 +389,10 @@
   var COLORS = ['#3b82f6','#22d3ee','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#6366f1'];
 
   var allVisits = [];
+  var filteredVisits = [];
+  var filterFromDate = null;
+  var blockedHashes = JSON.parse(localStorage.getItem('dash_blocked_ips') || '[]');
+  var myIpHash = null;
 
   // ── Password Gate ──
   async function sha256(text) {
@@ -330,6 +432,128 @@
     var result = await sb.from('visits').select('*').order('visited_at', { ascending: false }).limit(10000);
     if (result.error || !result.data) { document.getElementById('dashboard').innerHTML = '<div class="dash-loading">Error loading data.</div>'; return; }
     allVisits = result.data;
+    detectMyIp();
+    applyFilter();
+    bindTimeToggle();
+    bindFilter();
+    bindBlockIp();
+    renderBlockedList();
+  }
+
+  // ── Detect current visitor's IP hash ──
+  async function detectMyIp() {
+    try {
+      var r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
+      if (r.ok) {
+        var g = await r.json();
+        if (g.ip) {
+          var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(g.ip));
+          myIpHash = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+          // Update button to show status
+          var btn = document.getElementById('block-my-ip');
+          if (blockedHashes.indexOf(myIpHash) !== -1) {
+            btn.classList.add('active');
+            btn.textContent = 'My IP Excluded ✓';
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  function saveBlockedHashes() {
+    localStorage.setItem('dash_blocked_ips', JSON.stringify(blockedHashes));
+  }
+
+  function renderBlockedList() {
+    var container = document.getElementById('blocked-list');
+    container.innerHTML = '';
+    if (!blockedHashes.length) {
+      container.innerHTML = '<span style="font-size:0.75rem;color:var(--color-text-faint)">No blocked IPs</span>';
+      return;
+    }
+    blockedHashes.forEach(function (hash) {
+      var tag = document.createElement('span');
+      tag.className = 'blocked-tag';
+      tag.innerHTML = escHtml(hash.slice(0, 12)) + '... <button data-hash="' + escHtml(hash) + '">&times;</button>';
+      container.appendChild(tag);
+    });
+  }
+
+  function bindBlockIp() {
+    document.getElementById('block-my-ip').addEventListener('click', function () {
+      if (!myIpHash) { alert('Could not detect your IP. Try refreshing.'); return; }
+      var idx = blockedHashes.indexOf(myIpHash);
+      if (idx === -1) {
+        blockedHashes.push(myIpHash);
+        this.classList.add('active');
+        this.textContent = 'My IP Excluded ✓';
+      } else {
+        blockedHashes.splice(idx, 1);
+        this.classList.remove('active');
+        this.textContent = 'Exclude My IP';
+      }
+      saveBlockedHashes();
+      renderBlockedList();
+      applyFilter();
+    });
+
+    document.getElementById('toggle-blocked').addEventListener('click', function () {
+      var panel = document.getElementById('blocked-ips-panel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.getElementById('blocked-list').addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-hash]');
+      if (!btn) return;
+      var hash = btn.dataset.hash;
+      var idx = blockedHashes.indexOf(hash);
+      if (idx !== -1) blockedHashes.splice(idx, 1);
+      saveBlockedHashes();
+      renderBlockedList();
+      applyFilter();
+      // Update my-ip button if needed
+      if (hash === myIpHash) {
+        var myBtn = document.getElementById('block-my-ip');
+        myBtn.classList.remove('active');
+        myBtn.textContent = 'Exclude My IP';
+      }
+    });
+  }
+
+  // ── Filter ──
+  function applyFilter() {
+    // Start with all visits, then apply blocked IPs filter
+    var base = allVisits;
+    if (blockedHashes.length) {
+      base = base.filter(function (v) {
+        return !v.ip_hash || blockedHashes.indexOf(v.ip_hash) === -1;
+      });
+    }
+
+    if (filterFromDate) {
+      filteredVisits = base.filter(function (v) {
+        return v.visited_at && v.visited_at.slice(0, 10) >= filterFromDate;
+      });
+    } else {
+      filteredVisits = base;
+    }
+
+    var info = document.getElementById('filter-info');
+    var parts = [];
+    if (filterFromDate) parts.push('from ' + filterFromDate);
+    if (blockedHashes.length) parts.push(blockedHashes.length + ' IP(s) excluded');
+    info.textContent = parts.length ? 'Showing ' + filteredVisits.length + ' of ' + allVisits.length + ' visits (' + parts.join(', ') + ')' : '';
+
+    if (filterFromDate) {
+      document.getElementById('filter-apply').classList.add('active');
+    } else {
+      document.getElementById('filter-apply').classList.remove('active');
+    }
+
+    renderAll();
+  }
+
+  function renderAll() {
     renderKPIs();
     renderTimeline(7);
     renderVisitorMap();
@@ -345,13 +569,33 @@
     renderBarList('chart-languages', groupBy('language'));
     renderBarList('chart-timezones', groupBy('timezone'));
     renderTimeSpent();
-    bindTimeToggle();
+    renderHeatmap();
+    renderScrollDepth();
+    renderEngagement();
+    renderBarList('chart-utm-source', groupBy('utm_source').filter(function (d) { return d[0] !== 'Unknown'; }));
+    renderBarList('chart-utm-campaign', groupBy('utm_campaign').filter(function (d) { return d[0] !== 'Unknown'; }));
+    renderDonut('chart-connection', groupBy('connection_type'));
+    renderBarList('chart-viewport', groupBy('viewport'));
+    renderProfiles();
+    renderHourDistribution();
+  }
+
+  function bindFilter() {
+    document.getElementById('filter-apply').addEventListener('click', function () {
+      var val = document.getElementById('filter-date').value;
+      if (val) { filterFromDate = val; applyFilter(); }
+    });
+    document.getElementById('filter-clear').addEventListener('click', function () {
+      filterFromDate = null;
+      document.getElementById('filter-date').value = '';
+      applyFilter();
+    });
   }
 
   // ── Utilities ──
   function groupBy(key) {
     var map = {};
-    allVisits.forEach(function (v) { var k = v[key] || 'Unknown'; map[k] = (map[k] || 0) + 1; });
+    filteredVisits.forEach(function (v) { var k = v[key] || 'Unknown'; map[k] = (map[k] || 0) + 1; });
     return Object.entries(map).sort(function (a, b) { return b[1] - a[1]; });
   }
 
@@ -377,22 +621,19 @@
 
   // ── KPIs ──
   function renderKPIs() {
-    document.getElementById('kpi-total').textContent = allVisits.length.toLocaleString();
+    document.getElementById('kpi-total').textContent = filteredVisits.length.toLocaleString();
 
-    // Unique visitors by ip_hash
     var hashes = {};
-    allVisits.forEach(function (v) { if (v.ip_hash) hashes[v.ip_hash] = true; });
+    filteredVisits.forEach(function (v) { if (v.ip_hash) hashes[v.ip_hash] = true; });
     var uniqueCount = Object.keys(hashes).length;
     document.getElementById('kpi-unique').textContent = uniqueCount ? uniqueCount.toLocaleString() : '—';
 
-    // Today
     var today = todayStr();
-    var todayCount = allVisits.filter(function (v) { return v.visited_at && v.visited_at.slice(0, 10) === today; }).length;
+    var todayCount = filteredVisits.filter(function (v) { return v.visited_at && v.visited_at.slice(0, 10) === today; }).length;
     document.getElementById('kpi-today').textContent = todayCount.toLocaleString();
 
-    // Returning visitors
     var hashCounts = {};
-    allVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
+    filteredVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
     var returning = Object.values(hashCounts).filter(function (c) { return c > 1; }).length;
     if (uniqueCount > 0) {
       document.getElementById('kpi-returning').innerHTML = returning + '<span class="kpi-unit"> (' + Math.round(returning / uniqueCount * 100) + '%)</span>';
@@ -400,8 +641,7 @@
       document.getElementById('kpi-returning').textContent = '—';
     }
 
-    // Avg time
-    var times = allVisits.map(function (v) { return v.time_spent_s || 0; }).filter(function (t) { return t > 0; });
+    var times = filteredVisits.map(function (v) { return v.time_spent_s || 0; }).filter(function (t) { return t > 0; });
     if (times.length) {
       var avg = Math.round(times.reduce(function (a, b) { return a + b; }, 0) / times.length);
       document.getElementById('kpi-time').innerHTML = avg + '<span class="kpi-unit">s</span>';
@@ -409,7 +649,6 @@
       document.getElementById('kpi-time').textContent = '—';
     }
 
-    // Top country, city, org
     var countries = groupBy('country');
     document.getElementById('kpi-country').textContent = countries.length ? countries[0][0] : '—';
     var cities = groupBy('city');
@@ -465,7 +704,7 @@
 
       // Plot visitor dots — aggregate by location
       var locMap = {};
-      allVisits.forEach(function (v) {
+      filteredVisits.forEach(function (v) {
         var lat = parseFloat(v.latitude);
         var lng = parseFloat(v.longitude);
         if (isNaN(lat) || isNaN(lng)) return;
@@ -474,7 +713,7 @@
         locMap[key].count++;
       });
       var locations = Object.values(locMap);
-      console.log('[Map] Visits with coords:', allVisits.filter(function(v){ return v.latitude && v.longitude; }).length, '| Unique locations:', locations.length);
+      console.log('[Map] Visits with coords:', filteredVisits.filter(function(v){ return v.latitude && v.longitude; }).length, '| Unique locations:', locations.length);
 
       if (locations.length) {
         var maxCount = d3.max(locations, function (d) { return d.count; }) || 1;
@@ -507,12 +746,10 @@
     var tbody = document.querySelector('#visitor-log tbody');
     tbody.innerHTML = '';
 
-    // Count visits per ip_hash for returning detection
     var hashCounts = {};
-    allVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
+    filteredVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
 
-    // Show most recent 100
-    var recent = allVisits.slice(0, 100);
+    var recent = filteredVisits.slice(0, 100);
     recent.forEach(function (v) {
       var location = [v.city, v.region, v.country].filter(Boolean).join(', ');
       var ref = '';
@@ -544,7 +781,7 @@
     container.innerHTML = '';
     var now = new Date();
     var cutoff = days === 'all' ? null : new Date(now.getTime() - days * 86400000);
-    var filtered = cutoff ? allVisits.filter(function (v) { return new Date(v.visited_at) >= cutoff; }) : allVisits;
+    var filtered = cutoff ? filteredVisits.filter(function (v) { return new Date(v.visited_at) >= cutoff; }) : filteredVisits;
 
     var byDate = {};
     filtered.forEach(function (v) {
@@ -675,7 +912,7 @@
     var container = document.getElementById('chart-referrers');
     container.innerHTML = '';
     var refs = {};
-    allVisits.forEach(function (v) {
+    filteredVisits.forEach(function (v) {
       if (!v.referrer) return;
       var host;
       try { host = new URL(v.referrer).hostname.replace('www.', ''); } catch (_) { host = v.referrer; }
@@ -707,7 +944,7 @@
       { label: '3-5m', min: 180, max: 300, count: 0 },
       { label: '5m+', min: 300, max: Infinity, count: 0 }
     ];
-    allVisits.forEach(function (v) {
+    filteredVisits.forEach(function (v) {
       var t = v.time_spent_s || 0;
       for (var i = 0; i < buckets.length; i++) {
         if (t >= buckets[i].min && t < buckets[i].max) { buckets[i].count++; break; }
@@ -731,6 +968,205 @@
 
     svg.selectAll('.hist-label').data(buckets).enter().append('text').attr('class', 'hist-label').attr('x', function (d) { return x(d.label) + x.bandwidth() / 2; }).attr('y', function (d) { return y(d.count) - 6; }).attr('text-anchor', 'middle').text(function (d) { return d.count || ''; });
   }
+  // ── Heatmap (Day × Hour) ──
+  function renderHeatmap() {
+    var container = document.getElementById('chart-heatmap');
+    container.innerHTML = '';
+    var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var grid = {};
+    filteredVisits.forEach(function (v) {
+      if (!v.visited_at) return;
+      var d = new Date(v.visited_at);
+      var day = d.getDay();
+      var hour = d.getHours();
+      var key = day + '-' + hour;
+      grid[key] = (grid[key] || 0) + 1;
+    });
+    var maxVal = 1;
+    Object.values(grid).forEach(function (c) { if (c > maxVal) maxVal = c; });
+
+    var cellSize = 22, gap = 2;
+    var labelW = 36, labelH = 20;
+    var w = labelW + 24 * (cellSize + gap);
+    var h = labelH + 7 * (cellSize + gap);
+
+    var svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+    var colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, maxVal]);
+
+    for (var day = 0; day < 7; day++) {
+      svg.append('text').attr('class', 'heatmap-label').attr('x', labelW - 4).attr('y', labelH + day * (cellSize + gap) + cellSize / 2 + 3).attr('text-anchor', 'end').text(days[day]);
+      for (var hour = 0; hour < 24; hour++) {
+        var val = grid[day + '-' + hour] || 0;
+        svg.append('rect').attr('class', 'heatmap-cell').attr('x', labelW + hour * (cellSize + gap)).attr('y', labelH + day * (cellSize + gap)).attr('width', cellSize).attr('height', cellSize).attr('fill', val > 0 ? colorScale(val) : 'rgba(255,255,255,0.03)').append('title').text(days[day] + ' ' + hour + ':00 — ' + val + ' visits');
+      }
+    }
+    for (var h2 = 0; h2 < 24; h2 += 3) {
+      svg.append('text').attr('class', 'heatmap-label').attr('x', labelW + h2 * (cellSize + gap) + cellSize / 2).attr('y', labelH - 4).attr('text-anchor', 'middle').text(h2 + 'h');
+    }
+  }
+
+  // ── Scroll Depth Distribution ──
+  function renderScrollDepth() {
+    var container = document.getElementById('chart-scroll');
+    container.innerHTML = '';
+    var buckets = [
+      { label: '0-25%', min: 0, max: 25, count: 0 },
+      { label: '25-50%', min: 25, max: 50, count: 0 },
+      { label: '50-75%', min: 50, max: 75, count: 0 },
+      { label: '75-100%', min: 75, max: 101, count: 0 }
+    ];
+    var hasData = false;
+    filteredVisits.forEach(function (v) {
+      var s = v.scroll_depth;
+      if (s == null) return;
+      hasData = true;
+      for (var i = 0; i < buckets.length; i++) {
+        if (s >= buckets[i].min && s < buckets[i].max) { buckets[i].count++; break; }
+      }
+    });
+    if (!hasData) { container.innerHTML = '<p class="ref-empty">No scroll data yet. New visits will capture this.</p>'; return; }
+
+    var margin = { top: 10, right: 20, bottom: 30, left: 40 };
+    var width = container.clientWidth - margin.left - margin.right;
+    var height = 160;
+
+    var svg = d3.select(container).append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    var x = d3.scaleBand().domain(buckets.map(function (b) { return b.label; })).range([0, width]).padding(0.2);
+    var y = d3.scaleLinear().domain([0, d3.max(buckets, function (b) { return b.count; }) || 1]).nice().range([height, 0]);
+
+    svg.append('g').attr('class', 'axis').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x)).select('.domain').remove();
+    svg.append('g').attr('class', 'axis').call(d3.axisLeft(y).ticks(4).tickSize(-width)).select('.domain').remove();
+
+    svg.selectAll('.hist-bar').data(buckets).enter().append('rect').attr('class', 'hist-bar').attr('x', function (d) { return x(d.label); }).attr('y', function (d) { return y(d.count); }).attr('width', x.bandwidth()).attr('height', function (d) { return height - y(d.count); });
+    svg.selectAll('.hist-label').data(buckets).enter().append('text').attr('class', 'hist-label').attr('x', function (d) { return x(d.label) + x.bandwidth() / 2; }).attr('y', function (d) { return y(d.count) - 4; }).attr('text-anchor', 'middle').text(function (d) { return d.count || ''; });
+  }
+
+  // ── Engagement Score ──
+  function renderEngagement() {
+    var container = document.getElementById('chart-engagement');
+    container.innerHTML = '';
+    var buckets = [
+      { label: 'Bounce (<10s, <25% scroll)', count: 0 },
+      { label: 'Low (10-30s)', count: 0 },
+      { label: 'Medium (30s-2m)', count: 0 },
+      { label: 'High (2m+ or 75%+ scroll)', count: 0 }
+    ];
+    filteredVisits.forEach(function (v) {
+      var t = v.time_spent_s || 0;
+      var s = v.scroll_depth || 0;
+      if (t >= 120 || s >= 75) buckets[3].count++;
+      else if (t >= 30) buckets[2].count++;
+      else if (t >= 10) buckets[1].count++;
+      else buckets[0].count++;
+    });
+
+    var ul = document.createElement('ul');
+    ul.className = 'ref-list';
+    var total = filteredVisits.length || 1;
+    buckets.forEach(function (b) {
+      var li = document.createElement('li');
+      li.className = 'ref-item';
+      li.innerHTML = '<span class="ref-name">' + escHtml(b.label) + '</span><span class="ref-count">' + b.count + ' (' + Math.round(b.count / total * 100) + '%)</span>';
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  }
+
+  // ── Returning Visitor Profiles ──
+  function renderProfiles() {
+    var container = document.getElementById('chart-profiles');
+    container.innerHTML = '';
+
+    var byHash = {};
+    filteredVisits.forEach(function (v) {
+      if (!v.ip_hash) return;
+      if (!byHash[v.ip_hash]) byHash[v.ip_hash] = [];
+      byHash[v.ip_hash].push(v);
+    });
+
+    var profiles = Object.entries(byHash)
+      .filter(function (e) { return e[1].length > 1; })
+      .sort(function (a, b) { return b[1].length - a[1].length; })
+      .slice(0, 20);
+
+    if (!profiles.length) { container.innerHTML = '<p class="ref-empty">No returning visitors yet.</p>'; return; }
+
+    var ul = document.createElement('ul');
+    ul.className = 'profile-list';
+
+    profiles.forEach(function (entry) {
+      var hash = entry[0];
+      var visits = entry[1];
+      var first = visits[visits.length - 1];
+      var last = visits[0];
+      var locations = {};
+      var devices = {};
+      var totalTime = 0;
+      var maxScroll = 0;
+      var totalClicks = 0;
+      visits.forEach(function (v) {
+        var loc = [v.city, v.country].filter(Boolean).join(', ');
+        if (loc) locations[loc] = true;
+        if (v.device_type) devices[v.device_type] = true;
+        totalTime += v.time_spent_s || 0;
+        if ((v.scroll_depth || 0) > maxScroll) maxScroll = v.scroll_depth;
+        totalClicks += v.click_count || 0;
+      });
+
+      var li = document.createElement('li');
+      li.className = 'profile-item';
+      li.innerHTML =
+        '<div class="profile-header">' +
+          '<span class="profile-hash">' + escHtml(hash.slice(0, 12)) + '...</span>' +
+          '<span class="profile-visits">' + visits.length + ' visits</span>' +
+        '</div>' +
+        '<div class="profile-meta">' +
+          '<span>📍 ' + escHtml(Object.keys(locations).join(' | ') || 'Unknown') + '</span>' +
+          '<span>🖥 ' + escHtml(Object.keys(devices).join(', ')) + '</span>' +
+          '<span>🏢 ' + escHtml(first.org || '—') + '</span>' +
+        '</div>' +
+        '<div class="profile-meta">' +
+          '<span>First: ' + escHtml(formatTime(first.visited_at)) + '</span>' +
+          '<span>Last: ' + escHtml(formatTime(last.visited_at)) + '</span>' +
+          '<span>Total time: ' + formatDuration(totalTime) + '</span>' +
+          '<span>Clicks: ' + totalClicks + '</span>' +
+          '<span>Max scroll: ' + maxScroll + '%</span>' +
+        '</div>' +
+        '<div class="engagement-bar"><div class="engagement-fill" style="width:' + Math.min(maxScroll, 100) + '%"></div></div>';
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  }
+
+  // ── Hour Distribution ──
+  function renderHourDistribution() {
+    var container = document.getElementById('chart-hours');
+    container.innerHTML = '';
+    var hours = new Array(24).fill(0);
+    filteredVisits.forEach(function (v) {
+      if (!v.visited_at) return;
+      var h = new Date(v.visited_at).getHours();
+      hours[h]++;
+    });
+    var data = hours.map(function (count, h) { return { label: h + ':00', count: count }; });
+
+    var margin = { top: 10, right: 20, bottom: 30, left: 40 };
+    var width = container.clientWidth - margin.left - margin.right;
+    var height = 180;
+
+    var svg = d3.select(container).append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    var x = d3.scaleBand().domain(data.map(function (d) { return d.label; })).range([0, width]).padding(0.15);
+    var y = d3.scaleLinear().domain([0, d3.max(data, function (d) { return d.count; }) || 1]).nice().range([height, 0]);
+
+    svg.append('g').attr('class', 'axis').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).tickValues(data.filter(function (d, i) { return i % 3 === 0; }).map(function (d) { return d.label; }))).select('.domain').remove();
+    svg.append('g').attr('class', 'axis').call(d3.axisLeft(y).ticks(5).tickSize(-width)).select('.domain').remove();
+    svg.selectAll('.axis .tick line').attr('stroke', 'rgba(255,255,255,0.04)');
+
+    svg.selectAll('.hist-bar').data(data).enter().append('rect').attr('class', 'hist-bar').attr('x', function (d) { return x(d.label); }).attr('y', function (d) { return y(d.count); }).attr('width', x.bandwidth()).attr('height', function (d) { return height - y(d.count); });
+  }
+
 })();
 </script>
 </body>

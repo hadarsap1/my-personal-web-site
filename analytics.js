@@ -8,6 +8,7 @@
   if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return; // skip until configured
 
   let sb, visitId, startTime = Date.now();
+  let maxScrollDepth = 0, clickCount = 0, focusedTime = 0, lastFocusAt = Date.now();
 
   // ── Helpers ─────────────────────────────────────────────
   function detectDevice() {
@@ -36,6 +37,55 @@
     if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
     return 'Other';
   }
+
+  function getUTMParams() {
+    var params = new URLSearchParams(location.search);
+    return {
+      utm_source: params.get('utm_source') || null,
+      utm_medium: params.get('utm_medium') || null,
+      utm_campaign: params.get('utm_campaign') || null
+    };
+  }
+
+  function getViewport() {
+    return window.innerWidth + 'x' + window.innerHeight;
+  }
+
+  function getConnectionType() {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!c) return null;
+    return c.effectiveType || c.type || null;
+  }
+
+  function isTouch() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  // ── Scroll depth tracking ────────────────────────────────
+  function trackScroll() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var docHeight = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight
+    );
+    var winHeight = window.innerHeight;
+    if (docHeight <= winHeight) { maxScrollDepth = 100; return; }
+    var pct = Math.round((scrollTop + winHeight) / docHeight * 100);
+    if (pct > maxScrollDepth) maxScrollDepth = Math.min(pct, 100);
+  }
+  window.addEventListener('scroll', trackScroll, { passive: true });
+
+  // ── Click count tracking ─────────────────────────────────
+  document.addEventListener('click', function () { clickCount++; });
+
+  // ── Focused time tracking (active tab only) ──────────────
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      focusedTime += Date.now() - lastFocusAt;
+    } else {
+      lastFocusAt = Date.now();
+    }
+  });
 
   // ── Geo helpers ────────────────────────────────────────
   async function hashIP(ip) {
@@ -97,6 +147,8 @@
         ipHash = await hashIP(geo.ip);
       }
 
+      var utm = getUTMParams();
+
       const row = {
         page_url: location.pathname + location.search,
         referrer: document.referrer || null,
@@ -114,7 +166,19 @@
         screen_resolution: screen.width + 'x' + screen.height,
         language: navigator.language || null,
         ip_hash: ipHash,
-        time_spent_s: 0
+        time_spent_s: 0,
+        // New fields
+        scroll_depth: 0,
+        click_count: 0,
+        focused_time_s: 0,
+        viewport: getViewport(),
+        connection_type: getConnectionType(),
+        is_touch: isTouch(),
+        utm_source: utm.utm_source,
+        utm_medium: utm.utm_medium,
+        utm_campaign: utm.utm_campaign,
+        visit_hour: new Date().getHours(),
+        visit_weekday: new Date().getDay()
       };
 
       const { data, error } = await sb.from(TABLE).insert(row).select('id').single();
@@ -122,11 +186,17 @@
     } catch (_) { /* analytics must never break the site */ }
   }
 
-  // ── Update time spent on leave ──────────────────────────
-  function updateTime() {
+  // ── Update engagement data on leave ───────────────────────
+  function updateEngagement() {
     if (!sb || !visitId) return;
-    const seconds = Math.round((Date.now() - startTime) / 1000);
-    // Use keepalive so the request survives page close
+    var seconds = Math.round((Date.now() - startTime) / 1000);
+    // Add remaining focused time
+    var totalFocused = focusedTime;
+    if (document.visibilityState !== 'hidden') {
+      totalFocused += Date.now() - lastFocusAt;
+    }
+    var focusedSec = Math.round(totalFocused / 1000);
+
     fetch(SUPABASE_URL + '/rest/v1/' + TABLE + '?id=eq.' + visitId, {
       method: 'PATCH',
       headers: {
@@ -135,15 +205,20 @@
         'Authorization': 'Bearer ' + SUPABASE_KEY,
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ time_spent_s: seconds }),
+      body: JSON.stringify({
+        time_spent_s: seconds,
+        scroll_depth: maxScrollDepth,
+        click_count: clickCount,
+        focused_time_s: focusedSec
+      }),
       keepalive: true
     });
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') updateTime();
+    if (document.visibilityState === 'hidden') updateEngagement();
   });
-  window.addEventListener('beforeunload', updateTime);
+  window.addEventListener('beforeunload', updateEngagement);
 
   // ── Go ──────────────────────────────────────────────────
   init();
