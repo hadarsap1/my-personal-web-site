@@ -127,6 +127,16 @@
 
   // ── Init ────────────────────────────────────────────────
   async function init() {
+    // Deduplicate: only one visit per browser session
+    var existingId = sessionStorage.getItem('_v_id');
+    if (existingId) {
+      try {
+        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        visitId = existingId;
+      } catch (_) {}
+      return;
+    }
+
     try {
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -182,7 +192,10 @@
       };
 
       const { data, error } = await sb.from(TABLE).insert(row).select('id').single();
-      if (!error && data) visitId = data.id;
+      if (!error && data) {
+        visitId = data.id;
+        try { sessionStorage.setItem('_v_id', data.id); } catch (_) {}
+      }
     } catch (_) { /* analytics must never break the site */ }
   }
 
