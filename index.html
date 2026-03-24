@@ -103,9 +103,9 @@
           <h1 class="hero-name text-[clamp(3.2rem,10vw,7.5rem)] font-black text-[#111827] leading-[0.92] mb-4 sm:mb-6">
             Hadar<br>Sapir
           </h1>
-          <p class="text-[clamp(1rem,2.5vw,1.4rem)] font-semibold text-teal-600 tracking-tight mb-4">Head of Product  - Arpalus</p>
+          <p class="text-[clamp(1rem,2.5vw,1.4rem)] font-semibold text-teal-600 tracking-tight mb-4">Head of Product - Arpalus</p>
           <p class="text-sm sm:text-base text-[#6b7280] leading-relaxed max-w-lg text-balance">
-            From Nestl&eacute;'s data floors to startup war rooms  - I turn complex problems into products people actually use.
+            From Nestl&eacute;'s data floors to startup war rooms - I turn complex problems into products people actually use.
           </p>
         </div>
 
@@ -176,6 +176,14 @@
               <span class="text-[#9ca3af] text-xs ml-1">Israel</span>
             </div>
 
+            <!-- Hero CTAs -->
+            <div class="flex flex-wrap items-center gap-3 mt-2">
+              <a href="#contact" class="inline-flex items-center gap-2 bg-[#111827] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#1f2937] transition-colors duration-200">
+                Let's Talk
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+              </a>
+            </div>
+
           </div>
         </div>
 
@@ -238,7 +246,7 @@
               <div class="timeline-content">
                 <h3 class="text-lg font-bold text-[#111827] tracking-tight leading-tight">Marketing Data Analyst</h3>
                 <p class="text-sm font-medium text-[#9ca3af] mt-0.5">StoreNext</p>
-                <p class="text-sm text-[#6b7280] mt-3 leading-relaxed">Built the analytical foundation  - working with large-scale retail and shopper datasets to identify behavioral patterns and growth opportunities.</p>
+                <p class="text-sm text-[#6b7280] mt-3 leading-relaxed">Built the analytical foundation - working with large-scale retail and shopper datasets to identify behavioral patterns and growth opportunities.</p>
               </div>
             </div>
 
@@ -251,7 +259,8 @@
           <!-- Dark CTA card - inverted, creates contrast in the column -->
           <div class="bento-card bento-card-dark p-6 flex flex-col justify-between">
             <div>
-              <p class="text-[#9ca3af] text-xs leading-relaxed">Available for product leadership roles at companies building with AI and data.</p>
+              <p class="text-[#f9fafb] text-sm font-semibold leading-snug">Open to product leadership roles</p>
+              <p class="text-[#9ca3af] text-xs mt-2 leading-relaxed">I partner with AI-first and data-driven companies to turn ambiguity into shipped product. If you're building something hard, let's talk.</p>
             </div>
             <div class="mt-6">
               <a href="#contact" class="inline-flex items-center gap-2 bg-[#0d9488] text-white text-sm font-bold px-5 py-2.5 rounded-full hover:bg-[#0f766e] transition-colors duration-200">
@@ -330,7 +339,7 @@
           </div>
           <div class="bg-gradient-to-br from-teal-900/30 to-teal-800/10 p-6 sm:p-8 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-[#374151]/50">
             <div class="flex flex-wrap gap-1.5 mb-5">
-              <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 border border-teal-400/20">Next.js 16</span>
+              <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 border border-teal-400/20">Next.js 15</span>
               <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 border border-teal-400/20">React 19</span>
               <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 border border-teal-400/20">PostgreSQL</span>
               <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 border border-teal-400/20">NextAuth</span>
@@ -530,6 +539,11 @@
           The Explorer's Mindset
         </h2>
         <p class="text-[#6b7280] mt-3 text-base max-w-lg leading-relaxed">25+ countries across 5 continents. Each destination shaped a distinct leadership insight.</p>
+        <p class="text-xs text-[#6b7280] mt-3 flex items-center gap-3">
+          <span class="flex items-center gap-1"><svg class="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-6-6m0 0l6-6m-6 6h12"/></svg>Drag to explore</span>
+          <span class="opacity-40">&middot;</span>
+          <span class="flex items-center gap-1"><svg class="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Click markers for insights</span>
+        </p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -565,6 +579,7 @@
         src="adventure.jpg"
         alt="Hadar adventuring in the world"
         class="adventure-img"
+        loading="lazy"
         onerror="this.style.display='none';this.parentElement.classList.add('adventure-fallback')"
       >
       <div class="adventure-overlay">
@@ -591,7 +606,7 @@
             For 11 years, I've been running alongside PTSD veterans in Jerusalem. Every Saturday morning, before any product meeting or strategy deck.
           </p>
           <p class="text-sm text-[#6b7280] mt-4 leading-relaxed">
-            Leading 100+ person communities isn't just about logistics  - it's about showing up, every week, for what matters. Running for Resilience.
+            Leading 100+ person communities isn't just about logistics - it's about showing up, every week, for what matters. Running for Resilience.
           </p>
 
           <div class="mt-8 grid grid-cols-3 gap-3">
@@ -607,6 +622,13 @@
               <span class="text-2xl sm:text-3xl font-black tracking-tight block gradient-number">42km</span>
               <p class="text-[11px] text-[#9ca3af] mt-1 leading-tight">Marathon distance</p>
             </div>
+          </div>
+
+          <div class="mt-6">
+            <a href="#contact" class="inline-flex items-center gap-2 bg-[#111827] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#1f2937] transition-colors duration-200">
+              Let's Talk
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+            </a>
           </div>
         </div>
 
@@ -632,7 +654,7 @@
           <div class="bento-card p-7 flex-1">
             <p class="text-[10px] font-semibold tracking-[0.12em] uppercase text-[#9ca3af] mb-4">Why it matters</p>
             <p class="text-sm text-[#374151] leading-relaxed">
-              The same qualities that make a good community leader  - consistency, empathy, showing up when it's hard  - are exactly what I bring to product leadership.
+              The same qualities that make a good community leader - consistency, empathy, showing up when it's hard - are exactly what I bring to product leadership.
             </p>
             <div class="mt-5 flex items-center gap-2.5">
               <span class="w-8 h-8 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
@@ -694,7 +716,30 @@
             </a>
           </div>
 
-          <p class="text-[#9ca3af] text-xs mt-8">Hadarsap@gmail.com &middot; Israel</p>
+          <div class="mt-8 pt-8 border-t border-white/[0.08]">
+            <span class="inline-flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+              Unlock Premium
+            </span>
+            <p class="text-[#f9fafb] text-sm font-semibold mb-1.5">The full version exists.</p>
+            <p class="text-[#6b7280] text-xs mb-4 leading-relaxed">I could've made you fill out a form. I didn't.</p>
+            <div class="flex gap-2 max-w-sm">
+              <input type="email" id="resume-contact" aria-label="Your email address" placeholder="your@email.com" class="flex-1 bg-white/[0.06] border border-white/[0.12] rounded-full px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline-none focus:border-teal-400/50">
+              <button onclick="requestResume()" class="inline-flex items-center gap-1.5 bg-teal-500 hover:bg-teal-400 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors duration-200 whitespace-nowrap">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+                Unlock
+              </button>
+            </div>
+            <p id="resume-sent" class="hidden text-emerald-400 text-xs mt-2">Your mail app is ready. Hit send!</p>
+          </div>
+
+          <p class="text-[#9ca3af] text-xs mt-6">
+            <button onclick="copyEmail(this)" class="text-[#9ca3af] hover:text-teal-400 transition-colors inline-flex items-center gap-1 mr-1" title="Copy email">
+              Hadarsap@gmail.com
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+            &middot; Israel
+          </p>
         </div>
 
       </div>

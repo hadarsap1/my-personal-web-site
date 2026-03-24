@@ -398,3 +398,29 @@ window.addEventListener('resize', () => {
     renderMap(cachedWorldData);
   }, 250);
 });
+
+// ── Resume request ────────────────────────────────────
+function requestResume() {
+  const emailInput = document.getElementById('resume-contact');
+  const email = emailInput.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
+  const subject = encodeURIComponent('Finally, a Product leader who makes it easy');
+  const body = encodeURIComponent(
+    'Hi Hadar,\n\n' +
+    'Your site got my attention and I want to see if our team is the kind of challenge you are looking for next.\n\n' +
+    'Please send your resume to: ' + email + '\n\n' +
+    'Looking forward to connecting!'
+  );
+  window.location.href = 'mailto:Hadarsap@gmail.com?subject=' + subject + '&reply-to=' + encodeURIComponent(email) + '&body=' + body;
+  document.getElementById('resume-sent').classList.remove('hidden');
+  document.getElementById('resume-contact').value = '';
+}
+
+// ── Copy email ────────────────────────────────────────
+function copyEmail(btn) {
+  navigator.clipboard.writeText('Hadarsap@gmail.com').then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = 'Copied! <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
+    setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  });
+}
