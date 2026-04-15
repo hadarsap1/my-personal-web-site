@@ -467,10 +467,15 @@
       var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip));
       myIpHash = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
       var btn = document.getElementById('block-my-ip');
-      if (blockedHashes.indexOf(myIpHash) !== -1) {
-        btn.classList.add('active');
-        btn.textContent = 'My IP Excluded ✓';
+      // Auto-exclude owner's IP on every dashboard load
+      if (blockedHashes.indexOf(myIpHash) === -1) {
+        blockedHashes.push(myIpHash);
+        saveBlockedHashes();
+        renderBlockedList();
+        applyFilter(); // Re-render now that IP is excluded
       }
+      btn.classList.add('active');
+      btn.textContent = 'My IP Excluded ✓';
     }
   }
 
@@ -545,12 +550,29 @@
     }
 
     if (filterFromDate) {
-      filteredVisits = base.filter(function (v) {
+      base = base.filter(function (v) {
         return v.visited_at && v.visited_at.slice(0, 10) >= filterFromDate;
       });
-    } else {
-      filteredVisits = base;
     }
+
+    // Deduplicate: collapse visits from the same ip_hash within 2 minutes of
+    // each other (race-condition duplicates from multiple tabs).
+    // Keep the entry with the highest time_spent_s.
+    var DEDUP_MS = 2 * 60 * 1000;
+    var seen = {}; // key: ip_hash + bucket → winner row
+    base.forEach(function (v) {
+      if (!v.ip_hash || !v.visited_at) return;
+      var ts = new Date(v.visited_at).getTime();
+      var bucket = Math.floor(ts / DEDUP_MS);
+      var key = v.ip_hash + '|' + bucket;
+      if (!seen[key] || (v.time_spent_s || 0) > (seen[key].time_spent_s || 0)) {
+        seen[key] = v;
+      }
+    });
+    // Visits without ip_hash (bots/unknown) are kept as-is
+    var noHash = base.filter(function (v) { return !v.ip_hash || !v.visited_at; });
+    filteredVisits = Object.values(seen).concat(noHash)
+      .sort(function (a, b) { return (b.visited_at || '').localeCompare(a.visited_at || ''); });
 
     var info = document.getElementById('filter-info');
     var parts = [];

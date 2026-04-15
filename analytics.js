@@ -127,7 +127,7 @@
 
   // ── Init ────────────────────────────────────────────────
   async function init() {
-    // Deduplicate: only one visit per browser session
+    // Deduplicate: only one visit per browser session (same tab)
     var existingId = sessionStorage.getItem('_v_id');
     if (existingId) {
       try {
@@ -136,6 +136,20 @@
       } catch (_) {}
       return;
     }
+
+    // Cross-tab cooldown: if another tab already registered a visit in the last
+    // 10 minutes, reuse that row instead of creating a duplicate.
+    var COOLDOWN_MS = 10 * 60 * 1000;
+    try {
+      var lastTs = parseInt(localStorage.getItem('_v_ts') || '0', 10);
+      var lastId = localStorage.getItem('_v_lid');
+      if (lastId && Date.now() - lastTs < COOLDOWN_MS) {
+        visitId = lastId;
+        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        sessionStorage.setItem('_v_id', lastId);
+        return;
+      }
+    } catch (_) {}
 
     try {
       sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -194,7 +208,11 @@
       const { data, error } = await sb.from(TABLE).insert(row).select('id').single();
       if (!error && data) {
         visitId = data.id;
-        try { sessionStorage.setItem('_v_id', data.id); } catch (_) {}
+        try {
+          sessionStorage.setItem('_v_id', data.id);
+          localStorage.setItem('_v_lid', data.id);
+          localStorage.setItem('_v_ts', Date.now().toString());
+        } catch (_) {}
       }
     } catch (_) { /* analytics must never break the site */ }
   }
