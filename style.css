@@ -798,6 +798,259 @@
 
 
 /* ==========================================================================
+   GIT LOG TIMELINE
+   ========================================================================== */
+
+.gitlog-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  overflow: hidden;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+}
+
+.gitlog-titlebar {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: #161b22;
+  border-bottom: 1px solid #21262d;
+  gap: 0.75rem;
+}
+
+.gitlog-title {
+  font-size: 0.67rem;
+  color: #6b7280;
+  letter-spacing: 0.02em;
+}
+
+.gitlog-body {
+  padding: 1.25rem 1rem 1rem;
+}
+
+.gitlog-commit {
+  display: flex;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.15s ease;
+}
+
+.gitlog-commit.gl-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.gitlog-commit:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gitlog-graph-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 14px;
+  padding-top: 0.1rem;
+}
+
+.gitlog-star {
+  color: #22d3ee;
+  font-size: 0.85rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.gitlog-vline {
+  width: 1px;
+  flex: 1;
+  background: #30363d;
+  min-height: 1.25rem;
+  margin-top: 0.3rem;
+}
+
+.gitlog-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.gitlog-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gitlog-hash {
+  font-size: 0.7rem;
+  color: #e8a045;
+  flex-shrink: 0;
+}
+
+.gitlog-tag {
+  font-size: 0.62rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+}
+
+.gitlog-tag-head {
+  background: rgba(34, 211, 238, 0.1);
+  color: #22d3ee;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.gitlog-msg {
+  font-size: 0.8rem;
+  color: #e6edf3;
+  font-weight: 600;
+}
+
+.gitlog-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.gitlog-author { font-size: 0.67rem; color: #6b7280; }
+.gitlog-date   { font-size: 0.67rem; color: #4b5563; }
+
+.gitlog-company {
+  font-size: 0.67rem;
+  color: #0d9488;
+  font-weight: 600;
+}
+
+.gitlog-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease, margin-top 0.3s ease;
+  overflow: hidden;
+}
+
+.gitlog-detail.open {
+  grid-template-rows: 1fr;
+  margin-top: 0.5rem;
+}
+
+.gitlog-detail-inner {
+  min-height: 0;
+}
+
+.gitlog-detail-inner p {
+  font-family: Inter, -apple-system, sans-serif;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  line-height: 1.65;
+  padding-bottom: 0.25rem;
+}
+
+
+/* ==========================================================================
+   API RESPONSE CARD
+   ========================================================================== */
+
+.api-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+}
+
+.api-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.api-method {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #22d3ee;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+}
+
+.api-endpoint {
+  font-size: 0.72rem;
+  color: #e6edf3;
+  flex: 1;
+}
+
+.api-status-ok {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+.api-body {
+  padding: 0.9rem 1.1rem 1rem;
+}
+
+.api-line {
+  font-size: 0.75rem;
+  line-height: 1.9;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.api-line.al-visible {
+  opacity: 1;
+}
+
+.api-field { padding-left: 1.1rem; }
+
+.api-brace  { color: #e6edf3; }
+.api-key    { color: #7dd3fc; }
+.api-colon  { color: #e6edf3; margin: 0 0.2rem; }
+.api-string { color: #86efac; }
+.api-comma  { color: #4b5563; }
+
+.api-link {
+  color: #86efac;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(134, 239, 172, 0.3);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.api-link:hover {
+  color: #22d3ee;
+  border-bottom-color: rgba(34, 211, 238, 0.4);
+}
+
+.api-status-val {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.api-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulseDot 2.2s ease-in-out infinite;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+
+/* ==========================================================================
    PREFERS-REDUCED-MOTION
    ========================================================================== */
 
@@ -807,7 +1060,8 @@
   .marker-pulse,
   .home-marker .marker-glow,
   #map-container .map-skeleton,
-  .terminal-caret {
+  .terminal-caret,
+  .api-status-dot {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -816,8 +1070,20 @@
   .contact-btn-primary,
   .contact-btn-secondary,
   .social-link,
-  .chip-interactive {
+  .chip-interactive,
+  .gitlog-commit,
+  .gitlog-detail,
+  .api-line {
     transition: none;
+  }
+
+  .gitlog-commit {
+    opacity: 1;
+    transform: none;
+  }
+
+  .api-line {
+    opacity: 1;
   }
 
   .bento-card:hover,

@@ -519,6 +519,66 @@ const countUpObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('[data-countup]').forEach((el) => countUpObserver.observe(el));
 
 // ===================================================================
+// GIT LOG TIMELINE
+// ===================================================================
+function initGitLog() {
+  const commits = document.querySelectorAll('.gitlog-commit');
+  if (!commits.length) return;
+
+  // Click to expand/collapse detail
+  commits.forEach((commit) => {
+    commit.addEventListener('click', () => {
+      const idx = commit.dataset.gitlog;
+      const detail = document.getElementById('gitlog-detail-' + idx);
+      if (detail) detail.classList.toggle('open');
+    });
+  });
+
+  // Stagger commits in, then auto-expand each detail
+  const glObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      commits.forEach((commit, i) => {
+        setTimeout(() => {
+          commit.classList.add('gl-visible');
+          setTimeout(() => {
+            const detail = document.getElementById('gitlog-detail-' + i);
+            if (detail) detail.classList.add('open');
+          }, 320);
+        }, i * 280);
+      });
+      glObserver.disconnect();
+    });
+  }, { threshold: 0.2 });
+
+  const card = document.querySelector('.gitlog-card');
+  if (card) glObserver.observe(card);
+}
+initGitLog();
+
+// ===================================================================
+// API RESPONSE CARD
+// ===================================================================
+function initApiCard() {
+  const lines = document.querySelectorAll('#api-card .api-line');
+  if (!lines.length) return;
+
+  const apiObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      lines.forEach((line, i) => {
+        setTimeout(() => line.classList.add('al-visible'), 80 + i * 90);
+      });
+      apiObserver.disconnect();
+    });
+  }, { threshold: 0.3 });
+
+  const card = document.getElementById('api-card');
+  if (card) apiObserver.observe(card);
+}
+initApiCard();
+
+// ===================================================================
 // CHIP TILT (physical hover)
 // ===================================================================
 if (!prefersReducedMotion) {

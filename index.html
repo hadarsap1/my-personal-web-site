@@ -295,51 +295,85 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
 
-        <!-- Career Timeline - takes 2 cols, visually dominant -->
-        <div class="bento-card lg:col-span-2 p-7 sm:p-10">
-          <p class="text-[10px] font-semibold tracking-[0.12em] uppercase text-[#9ca3af] mb-8">Career</p>
-          <div class="space-y-9">
+        <!-- Career Timeline - git log style -->
+        <div class="gitlog-card lg:col-span-2">
+          <div class="gitlog-titlebar">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="gitlog-title">hadar/career &nbsp;—&nbsp; git log --oneline --graph</span>
+          </div>
+          <div class="gitlog-body">
 
-            <!-- Arpalus -->
-            <div class="timeline-entry">
-              <div class="timeline-meta">
-                <span class="timeline-year text-teal-600">2021 &ndash; Present</span>
-                <div class="timeline-dot timeline-dot-active"></div>
+            <!-- Commit 1: Arpalus -->
+            <div class="gitlog-commit" data-gitlog="0">
+              <div class="gitlog-graph-col">
+                <span class="gitlog-star">*</span>
+                <div class="gitlog-vline"></div>
               </div>
-              <div class="timeline-content">
-                <h3 class="text-lg font-bold text-[#111827] tracking-tight leading-tight">Head of Product</h3>
-                <p class="text-sm font-medium text-[#9ca3af] mt-0.5">Arpalus</p>
-                <p class="text-sm text-[#6b7280] mt-3 leading-relaxed">Joined as the sole product hire and grew to Head of Product. Own company-level strategy and roadmap for an AI-driven Computer Vision platform. Built QA and BI functions from scratch.</p>
+              <div class="gitlog-content">
+                <div class="gitlog-header-row">
+                  <span class="gitlog-hash">a3f2c1d</span>
+                  <span class="gitlog-tag gitlog-tag-head">HEAD &rarr; main</span>
+                  <span class="gitlog-msg">Head of Product</span>
+                </div>
+                <div class="gitlog-meta-row">
+                  <span class="gitlog-author">Hadar Sapir</span>
+                  <span class="gitlog-date">2021 - Present</span>
+                  <span class="gitlog-company">Arpalus</span>
+                </div>
+                <div class="gitlog-detail" id="gitlog-detail-0">
+                  <div class="gitlog-detail-inner">
+                    <p>Joined as the sole product hire and grew to Head of Product. Own company-level strategy and roadmap for an AI-driven Computer Vision platform. Built QA and BI functions from scratch.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="w-full border-t border-dashed border-[#e5e7eb]"></div>
-
-            <!-- Nestlé & KC -->
-            <div class="timeline-entry">
-              <div class="timeline-meta">
-                <span class="timeline-year text-[#9ca3af]">2015 &ndash; 2021</span>
-                <div class="timeline-dot"></div>
+            <!-- Commit 2: Nestlé & KC -->
+            <div class="gitlog-commit" data-gitlog="1">
+              <div class="gitlog-graph-col">
+                <span class="gitlog-star">*</span>
+                <div class="gitlog-vline"></div>
               </div>
-              <div class="timeline-content">
-                <h3 class="text-lg font-bold text-[#111827] tracking-tight leading-tight">Category Manager</h3>
-                <p class="text-sm font-medium text-[#9ca3af] mt-0.5">Nestl&eacute; &amp; Kimberly-Clark</p>
-                <p class="text-sm text-[#6b7280] mt-3 leading-relaxed">Owned strategy for one of Nestl&eacute;'s largest categories. Built analytical frameworks for pricing, promotions, and assortment. Led shopper marketing across retail channels.</p>
+              <div class="gitlog-content">
+                <div class="gitlog-header-row">
+                  <span class="gitlog-hash">7e9b4a2</span>
+                  <span class="gitlog-msg">Category Manager</span>
+                </div>
+                <div class="gitlog-meta-row">
+                  <span class="gitlog-author">Hadar Sapir</span>
+                  <span class="gitlog-date">2015 - 2021</span>
+                  <span class="gitlog-company">Nestl&eacute; &amp; Kimberly-Clark</span>
+                </div>
+                <div class="gitlog-detail" id="gitlog-detail-1">
+                  <div class="gitlog-detail-inner">
+                    <p>Owned strategy for one of Nestl&eacute;'s largest categories. Built analytical frameworks for pricing, promotions, and assortment. Led shopper marketing across retail channels.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="w-full border-t border-dashed border-[#e5e7eb]"></div>
-
-            <!-- StoreNext -->
-            <div class="timeline-entry">
-              <div class="timeline-meta">
-                <span class="timeline-year text-[#9ca3af]">2013 &ndash; 2015</span>
-                <div class="timeline-dot"></div>
+            <!-- Commit 3: StoreNext -->
+            <div class="gitlog-commit" data-gitlog="2">
+              <div class="gitlog-graph-col">
+                <span class="gitlog-star">*</span>
               </div>
-              <div class="timeline-content">
-                <h3 class="text-lg font-bold text-[#111827] tracking-tight leading-tight">Marketing Data Analyst</h3>
-                <p class="text-sm font-medium text-[#9ca3af] mt-0.5">StoreNext</p>
-                <p class="text-sm text-[#6b7280] mt-3 leading-relaxed">Built the analytical foundation - working with large-scale retail and shopper datasets to identify behavioral patterns and growth opportunities.</p>
+              <div class="gitlog-content">
+                <div class="gitlog-header-row">
+                  <span class="gitlog-hash">1c8d5f3</span>
+                  <span class="gitlog-msg">Marketing Data Analyst</span>
+                </div>
+                <div class="gitlog-meta-row">
+                  <span class="gitlog-author">Hadar Sapir</span>
+                  <span class="gitlog-date">2013 - 2015</span>
+                  <span class="gitlog-company">StoreNext</span>
+                </div>
+                <div class="gitlog-detail" id="gitlog-detail-2">
+                  <div class="gitlog-detail-inner">
+                    <p>Built the analytical foundation - working with large-scale retail and shopper datasets to identify behavioral patterns and growth opportunities.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -780,7 +814,8 @@
       <!-- Full-width contact block - dark with warm overtone, not a card clone -->
       <div class="contact-block bento-card bento-card-dark p-8 sm:p-10 lg:p-12">
 
-        <div class="max-w-3xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <div>
           <div class="inline-flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-3 py-1.5 rounded-full mb-5">
             <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full pulse-dot"></span>
             Ready for new challenges
@@ -833,6 +868,42 @@
             </button>
             &middot; Israel
           </p>
+          </div>
+
+          <!-- API response card -->
+          <div id="api-card" class="api-card">
+            <div class="api-titlebar">
+              <span class="api-method">GET</span>
+              <span class="api-endpoint">/api/hadar</span>
+              <span class="api-status-ok">200 OK</span>
+            </div>
+            <div class="api-body">
+              <div class="api-line"><span class="api-brace">{</span></div>
+              <div class="api-line api-field">
+                <span class="api-key">"name"</span><span class="api-colon">:</span> <span class="api-string">"Hadar Sapir"</span><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"role"</span><span class="api-colon">:</span> <span class="api-string">"Head of Product"</span><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"status"</span><span class="api-colon">:</span> <span class="api-status-val"><span class="api-status-dot"></span><span class="api-string">"open_to_work"</span></span><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"location"</span><span class="api-colon">:</span> <span class="api-string">"Israel"</span><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"email"</span><span class="api-colon">:</span> <a href="mailto:Hadarsap@gmail.com" class="api-string api-link">"Hadarsap@gmail.com"</a><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"experience"</span><span class="api-colon">:</span> <span class="api-string">"13+ years"</span><span class="api-comma">,</span>
+              </div>
+              <div class="api-line api-field">
+                <span class="api-key">"response_time"</span><span class="api-colon">:</span> <span class="api-string">"&lt; 24h"</span>
+              </div>
+              <div class="api-line"><span class="api-brace">}</span></div>
+            </div>
+          </div>
+
         </div>
 
       </div>
