@@ -314,6 +314,11 @@ document.querySelectorAll('.bento-card').forEach((el, i) => {
   observer.observe(el);
 });
 
+// Also observe elements with fade-in already set in HTML (e.g. terminal, pillar cards)
+document.querySelectorAll('.fade-in:not(.bento-card)').forEach((el) => {
+  observer.observe(el);
+});
+
 // Active nav state
 const navLinksAll = document.querySelectorAll('.nav-link, .mobile-nav-link');
 const sections = document.querySelectorAll('section[id]');
@@ -422,5 +427,108 @@ function copyEmail(btn) {
     const orig = btn.innerHTML;
     btn.innerHTML = 'Copied! <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
     setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  });
+}
+
+// ===================================================================
+// TERMINAL ANIMATION
+// ===================================================================
+function initTerminal() {
+  const cmdEl = document.getElementById('terminal-cmd');
+  const caretEl = document.getElementById('terminal-caret');
+  const outputEl = document.getElementById('terminal-output');
+  if (!cmdEl || !caretEl || !outputEl) return;
+
+  const COMMAND = './fetch-skills.sh';
+  const OUTPUT_LINES = [
+    { text: 'Initializing profile scanner...', cls: 'dim' },
+    { text: 'Connecting to experience database...', cls: 'dim' },
+    { text: '[OK] 11+ years of SaaS and AI product leadership', cls: 'ok' },
+    { text: '[OK] 90% time saved on BI reporting pipelines', cls: 'ok' },
+    { text: '[OK] Built QA, BI, and product functions from scratch', cls: 'ok' },
+    { text: '[OK] 3 custom AI agents running in production', cls: 'ok' },
+    { text: '[OK] 25+ countries, one relentless growth mindset', cls: 'ok' },
+    { text: 'Profile loaded. Ready to ship.', cls: 'accent' },
+  ];
+  let hasRun = false;
+
+  function runTerminal() {
+    if (hasRun) return;
+    hasRun = true;
+    caretEl.classList.add('no-blink');
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      cmdEl.textContent += COMMAND[i];
+      i++;
+      if (i >= COMMAND.length) {
+        clearInterval(typeInterval);
+        OUTPUT_LINES.forEach((line, idx) => {
+          setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'terminal-output-line terminal-line-' + line.cls;
+            div.textContent = line.text;
+            div.style.opacity = '0';
+            outputEl.appendChild(div);
+            requestAnimationFrame(() => {
+              div.style.transition = 'opacity 0.2s ease';
+              div.style.opacity = '1';
+            });
+            if (idx === OUTPUT_LINES.length - 1) {
+              caretEl.classList.remove('no-blink');
+            }
+          }, 350 + idx * 260);
+        });
+      }
+    }, 42);
+  }
+
+  setTimeout(runTerminal, 1800);
+  const terminalCard = document.getElementById('hero-terminal');
+  if (terminalCard) terminalCard.addEventListener('click', runTerminal);
+}
+initTerminal();
+
+// ===================================================================
+// COUNT-UP ANIMATION
+// ===================================================================
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function animateCountUp(el, target, suffix, duration) {
+  if (prefersReducedMotion) { el.textContent = target + suffix; return; }
+  const start = performance.now();
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target) + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const countUpObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.countup, 10);
+    const suffix = el.dataset.suffix || '';
+    animateCountUp(el, target, suffix, 1400);
+    countUpObserver.unobserve(el);
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('[data-countup]').forEach((el) => countUpObserver.observe(el));
+
+// ===================================================================
+// CHIP TILT (physical hover)
+// ===================================================================
+if (!prefersReducedMotion) {
+  document.querySelectorAll('.chip-interactive').forEach((chip) => {
+    chip.addEventListener('mousemove', (e) => {
+      const rect = chip.getBoundingClientRect();
+      const dx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const dy = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+      chip.style.transform = 'perspective(300px) rotateX(' + (dy * -7) + 'deg) rotateY(' + (dx * 7) + 'deg) scale(1.06)';
+    });
+    chip.addEventListener('mouseleave', () => { chip.style.transform = ''; });
   });
 }
