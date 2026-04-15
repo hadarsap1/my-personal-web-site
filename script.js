@@ -443,7 +443,7 @@ function initTerminal() {
   const OUTPUT_LINES = [
     { text: 'Initializing profile scanner...', cls: 'dim' },
     { text: 'Connecting to experience database...', cls: 'dim' },
-    { text: '[OK] 11+ years of SaaS and AI product leadership', cls: 'ok' },
+    { text: '[OK] 13+ years of SaaS and AI product leadership', cls: 'ok' },
     { text: '[OK] 90% time saved on BI reporting pipelines', cls: 'ok' },
     { text: '[OK] Built QA, BI, and product functions from scratch', cls: 'ok' },
     { text: '[OK] 3 custom AI agents running in production', cls: 'ok' },
