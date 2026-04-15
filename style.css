@@ -644,6 +644,160 @@
 
 
 /* ==========================================================================
+   TERMINAL COMPONENT
+   ========================================================================== */
+
+.terminal-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 520px;
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Cascadia Code', 'Courier New', monospace;
+}
+
+.terminal-titlebar {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background: #161b22;
+  border-bottom: 1px solid #21262d;
+  gap: 0.5rem;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.terminal-dots span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+
+.terminal-filename {
+  font-size: 0.67rem;
+  color: #6b7280;
+  margin: 0 auto;
+  letter-spacing: 0.02em;
+}
+
+.terminal-body {
+  padding: 0.875rem 1.1rem 1rem;
+  font-size: 0.775rem;
+  line-height: 1.6;
+  min-height: 2.5rem;
+}
+
+.terminal-prompt-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.terminal-dollar {
+  color: #0d9488;
+  font-weight: 700;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.terminal-cmd-text {
+  color: #e6edf3;
+}
+
+.terminal-caret {
+  display: inline-block;
+  width: 7px;
+  height: 0.9em;
+  background: #22d3ee;
+  vertical-align: text-bottom;
+  animation: caretBlink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+.terminal-caret.no-blink {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes caretBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-output {
+  margin-top: 0.1rem;
+}
+
+.terminal-output-line {
+  font-size: 0.775rem;
+  line-height: 1.7;
+  white-space: pre;
+}
+
+.terminal-line-dim   { color: #6b7280; }
+.terminal-line-ok    { color: #22c55e; }
+.terminal-line-accent { color: #22d3ee; font-weight: 600; }
+
+
+/* ==========================================================================
+   THREE PILLARS
+   ========================================================================== */
+
+.pillar-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.pillar-icon-saas      { background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; }
+.pillar-icon-ai        { background: #f0fdfa; border: 1px solid #ccfbf1; color: #0d9488; }
+.pillar-icon-community { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; }
+
+.pillar-bullet {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+.pillar-bullet-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   CHIP INTERACTIVE TILT
+   ========================================================================== */
+
+.chip-interactive {
+  transition: transform 0.12s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  cursor: default;
+  user-select: none;
+}
+
+.chip-interactive:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ==========================================================================
    PREFERS-REDUCED-MOTION
    ========================================================================== */
 
@@ -652,7 +806,8 @@
   .pulse-dot,
   .marker-pulse,
   .home-marker .marker-glow,
-  #map-container .map-skeleton {
+  #map-container .map-skeleton,
+  .terminal-caret {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -660,13 +815,15 @@
   .bento-card,
   .contact-btn-primary,
   .contact-btn-secondary,
-  .social-link {
+  .social-link,
+  .chip-interactive {
     transition: none;
   }
 
   .bento-card:hover,
   .contact-btn-primary:hover,
-  .contact-btn-secondary:hover {
+  .contact-btn-secondary:hover,
+  .chip-interactive:hover {
     transform: none;
   }
 }
