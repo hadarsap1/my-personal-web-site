@@ -63,6 +63,14 @@
     .chart-title { font-size: 0.95rem; font-weight: 600; color: var(--color-text); margin-bottom: 1rem; }
     .chart-svg { width: 100%; }
 
+    /* ===== Timeline Header ===== */
+    .timeline-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .timeline-header .chart-title { margin-bottom: 0; }
+    .metric-toggle { display: flex; gap: 0.375rem; }
+    .metric-btn { padding: 0.3rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: transparent; color: var(--color-text-muted); font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all var(--transition-fast); }
+    .metric-btn:hover { border-color: var(--color-border-hover); color: var(--color-text-secondary); }
+    .metric-btn.active { background: rgba(99, 102, 241, 0.15); border-color: #6366f1; color: #818cf8; }
+
     /* ===== Time Toggle ===== */
     .time-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
     .time-btn { padding: 0.3rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: transparent; color: var(--color-text-muted); font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all var(--transition-fast); }
@@ -242,7 +250,14 @@
 
     <!-- Visitors Over Time -->
     <div class="chart-card full">
-      <div class="chart-title">Visitors Over Time</div>
+      <div class="timeline-header">
+        <div class="chart-title" id="timeline-title">Visitors Over Time</div>
+        <div class="metric-toggle" id="metric-toggle">
+          <button class="metric-btn active" data-metric="visitors">Visitors</button>
+          <button class="metric-btn" data-metric="avg_duration">Avg Duration</button>
+          <button class="metric-btn" data-metric="total_time">Total Time</button>
+        </div>
+      </div>
       <div class="time-toggle" id="time-toggle">
         <button class="time-btn active" data-days="7">7d</button>
         <button class="time-btn" data-days="30">30d</button>
@@ -589,9 +604,11 @@
     renderAll();
   }
 
+  var timelineState = { days: 7, metric: 'visitors' };
+
   function renderAll() {
     renderKPIs();
-    renderTimeline(7);
+    renderTimeline(timelineState.days, timelineState.metric);
     renderVisitorMap();
     renderVisitorLog();
     renderCountries();
@@ -812,17 +829,24 @@
   }
 
   // ── Timeline (Area Chart) ──
-  function renderTimeline(days) {
+  function renderTimeline(days, metric) {
+    metric = metric || 'visitors';
     var container = document.getElementById('chart-timeline');
     container.innerHTML = '';
     var now = new Date();
     var cutoff = days === 'all' ? null : new Date(now.getTime() - days * 86400000);
     var filtered = cutoff ? filteredVisits.filter(function (v) { return new Date(v.visited_at) >= cutoff; }) : filteredVisits;
 
+    // Build per-date aggregates
     var byDate = {};
     filtered.forEach(function (v) {
       var d = v.visited_at.slice(0, 10);
-      byDate[d] = (byDate[d] || 0) + 1;
+      if (!byDate[d]) byDate[d] = { count: 0, totalTime: 0, timeCount: 0 };
+      byDate[d].count += 1;
+      if (v.time_spent_s && v.time_spent_s > 0) {
+        byDate[d].totalTime += v.time_spent_s;
+        byDate[d].timeCount += 1;
+      }
     });
 
     var dates = Object.keys(byDate).sort();
@@ -831,40 +855,93 @@
     var series = [];
     for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       var key = d.toISOString().slice(0, 10);
-      series.push({ date: new Date(key), count: byDate[key] || 0 });
+      var agg = byDate[key] || { count: 0, totalTime: 0, timeCount: 0 };
+      var value = 0;
+      if (metric === 'visitors') {
+        value = agg.count;
+      } else if (metric === 'avg_duration') {
+        value = agg.timeCount > 0 ? Math.round(agg.totalTime / agg.timeCount) : 0;
+      } else if (metric === 'total_time') {
+        value = agg.totalTime;
+      }
+      series.push({ date: new Date(key), value: value, agg: agg });
     }
 
-    var margin = { top: 10, right: 20, bottom: 30, left: 40 };
+    // Update card title
+    var titles = { visitors: 'Visitors Over Time', avg_duration: 'Avg Duration Over Time', total_time: 'Total Time on Page Over Time' };
+    document.getElementById('timeline-title').textContent = titles[metric] || 'Visitors Over Time';
+
+    // Y-axis tick formatter
+    function yFmt(v) {
+      if (metric === 'visitors') return v;
+      if (v >= 3600) return Math.floor(v / 3600) + 'h';
+      if (v >= 60) return Math.floor(v / 60) + 'm';
+      return v + 's';
+    }
+
+    var margin = { top: 10, right: 20, bottom: 30, left: metric === 'visitors' ? 40 : 52 };
     var width = container.clientWidth - margin.left - margin.right;
     var height = 200;
 
     var svg = d3.select(container).append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     var x = d3.scaleTime().domain(d3.extent(series, function (d) { return d.date; })).range([0, width]);
-    var y = d3.scaleLinear().domain([0, d3.max(series, function (d) { return d.count; }) || 1]).nice().range([height, 0]);
+    var y = d3.scaleLinear().domain([0, d3.max(series, function (d) { return d.value; }) || 1]).nice().range([height, 0]);
 
     svg.append('g').attr('class', 'axis').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(x).ticks(Math.min(series.length, 8)).tickFormat(d3.timeFormat('%b %d'))).select('.domain').remove();
-    svg.append('g').attr('class', 'axis').call(d3.axisLeft(y).ticks(5).tickSize(-width)).select('.domain').remove();
+    svg.append('g').attr('class', 'axis').call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(yFmt)).select('.domain').remove();
     svg.selectAll('.axis .tick line').attr('stroke', 'rgba(255,255,255,0.04)');
 
-    var area = d3.area().x(function (d) { return x(d.date); }).y0(height).y1(function (d) { return y(d.count); }).curve(d3.curveMonotoneX);
-    var line = d3.line().x(function (d) { return x(d.date); }).y(function (d) { return y(d.count); }).curve(d3.curveMonotoneX);
+    var area = d3.area().x(function (d) { return x(d.date); }).y0(height).y1(function (d) { return y(d.value); }).curve(d3.curveMonotoneX);
+    var line = d3.line().x(function (d) { return x(d.date); }).y(function (d) { return y(d.value); }).curve(d3.curveMonotoneX);
 
     svg.append('path').datum(series).attr('class', 'area-fill').attr('d', area);
     svg.append('path').datum(series).attr('class', 'area-line').attr('d', line);
 
     if (series.length <= 60) {
-      svg.selectAll('.area-dot').data(series).enter().append('circle').attr('class', 'area-dot').attr('cx', function (d) { return x(d.date); }).attr('cy', function (d) { return y(d.count); }).attr('r', 3);
+      var dots = svg.selectAll('.area-dot').data(series).enter().append('circle')
+        .attr('class', 'area-dot')
+        .attr('cx', function (d) { return x(d.date); })
+        .attr('cy', function (d) { return y(d.value); })
+        .attr('r', 3);
+
+      // Tooltip on hover
+      var tip = d3.select(container).append('div').style('position', 'absolute').style('pointer-events', 'none').style('background', 'rgba(15,23,42,0.92)').style('border', '1px solid rgba(255,255,255,0.1)').style('border-radius', '6px').style('padding', '6px 10px').style('font-size', '0.75rem').style('color', '#e2e8f0').style('opacity', 0).style('white-space', 'nowrap');
+      d3.select(container).style('position', 'relative');
+
+      dots.on('mouseover', function (event, d) {
+        var label = metric === 'visitors' ? d.value + ' visitors'
+          : metric === 'avg_duration' ? (d.agg.timeCount > 0 ? formatDuration(Math.round(d.agg.totalTime / d.agg.timeCount)) + ' avg' : 'no data')
+          : formatDuration(d.agg.totalTime) + ' total';
+        var dateStr = d3.timeFormat('%b %d, %Y')(d.date);
+        tip.html(dateStr + '<br><strong>' + label + '</strong>').style('opacity', 1);
+        d3.select(this).attr('r', 5);
+      }).on('mousemove', function (event) {
+        var rect = container.getBoundingClientRect();
+        tip.style('left', (event.clientX - rect.left + 12) + 'px').style('top', (event.clientY - rect.top - 36) + 'px');
+      }).on('mouseout', function () {
+        tip.style('opacity', 0);
+        d3.select(this).attr('r', 3);
+      });
     }
   }
 
   function bindTimeToggle() {
+    document.getElementById('metric-toggle').addEventListener('click', function (e) {
+      if (!e.target.classList.contains('metric-btn')) return;
+      document.querySelectorAll('.metric-btn').forEach(function (b) { b.classList.remove('active'); });
+      e.target.classList.add('active');
+      timelineState.metric = e.target.dataset.metric;
+      renderTimeline(timelineState.days, timelineState.metric);
+    });
+
     document.getElementById('time-toggle').addEventListener('click', function (e) {
       if (!e.target.classList.contains('time-btn')) return;
       document.querySelectorAll('.time-btn').forEach(function (b) { b.classList.remove('active'); });
       e.target.classList.add('active');
       var days = e.target.dataset.days;
-      renderTimeline(days === 'all' ? 'all' : parseInt(days));
+      timelineState.days = days === 'all' ? 'all' : parseInt(days);
+      renderTimeline(timelineState.days, timelineState.metric);
     });
   }
 
