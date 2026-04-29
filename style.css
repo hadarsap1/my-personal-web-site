@@ -1153,15 +1153,14 @@ section[id] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 150px;
-  height: 52px;
   flex-shrink: 0;
+  padding: 0 1.5rem;
 }
 
 .logo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: 36px;
+  width: auto;
+  max-width: 180px;
   display: block;
   opacity: 0.82;
   transition: opacity 0.2s ease;
