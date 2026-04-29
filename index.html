@@ -21,9 +21,23 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23111827' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' fill='%230d9488' font-size='42' font-weight='700' font-family='Inter,sans-serif'>HS</text></svg>">
+  <script>
+    // Apply theme before any paint to avoid flash of incorrect theme.
+    // Resolution order: ?theme= URL param > localStorage > prefers-color-scheme.
+    (function () {
+      try {
+        var qs = new URLSearchParams(location.search).get('theme');
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = qs || saved || (prefersDark ? 'dark' : 'light');
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -70,6 +84,10 @@
         <a href="#travel" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Travel</a>
         <a href="#mission" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Mission</a>
       </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="theme-icon-sun w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="theme-icon-moon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
       <a href="#contact" class="bg-[#111827] text-[#f9fafb] text-xs font-semibold px-4 py-1.5 rounded-full hover:bg-[#1f2937] transition-colors duration-200 ml-1 whitespace-nowrap">Get in Touch</a>
       <button class="md:hidden p-2 text-[#6b7280] hover:text-[#111827] transition-colors" id="mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -155,7 +173,7 @@
               <div class="w-full h-px bg-[#e5e7eb]"></div>
               <div class="fact-row">
                 <span class="fact-number">0 - 1</span>
-                <span class="fact-label">Built QA, BI, and product functions from scratch. Three times.</span>
+                <span class="fact-label">Built QA, BI, and product functions from scratch.</span>
               </div>
               <div class="w-full h-px bg-[#e5e7eb]"></div>
               <div class="fact-row">
@@ -194,7 +212,6 @@
               <a href="https://github.com/hadarsap1" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
               </a>
-              <span class="text-[#9ca3af] text-xs ml-1">Israel</span>
             </div>
 
             <!-- Hero CTAs -->
@@ -208,6 +225,41 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- ===== COMPANY LOGOS MARQUEE ===== -->
+    <section id="track-record" class="pt-10 sm:pt-14 pb-4 max-w-6xl mx-auto">
+      <p class="logos-eyebrow">Track record at</p>
+      <div class="logos-strip" aria-label="Companies I've worked at">
+        <div class="logos-track">
+          <!-- Set 1 -->
+          <div class="logo-item">
+            <img src="logos/arpalus-color.svg" alt="Arpalus" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item">
+            <img src="logos/kimberly-clark-color.svg" alt="Kimberly-Clark" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item">
+            <img src="logos/nestle-color.svg" alt="Nestlé" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item">
+            <img src="logos/storenext-color.png" alt="StoreNext" class="logo-img" loading="lazy">
+          </div>
+          <!-- Set 2 — duplicate for seamless infinite loop -->
+          <div class="logo-item" aria-hidden="true">
+            <img src="logos/arpalus-color.svg" alt="" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item" aria-hidden="true">
+            <img src="logos/kimberly-clark-color.svg" alt="" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item" aria-hidden="true">
+            <img src="logos/nestle-color.svg" alt="" class="logo-img" loading="lazy">
+          </div>
+          <div class="logo-item" aria-hidden="true">
+            <img src="logos/storenext-color.png" alt="" class="logo-img" loading="lazy">
+          </div>
+        </div>
       </div>
     </section>
 
@@ -244,7 +296,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
           </div>
           <h3 class="text-base font-bold text-[#111827] mb-1.5 tracking-tight">AI Architecture</h3>
-          <p class="text-sm text-[#6b7280] leading-relaxed mb-4">Not just prompting. Designing AI systems that save real time - 90% reduction on BI pipelines, 3 agents running in production.</p>
+          <p class="text-sm text-[#6b7280] leading-relaxed mb-4">Not just prompting. Production AI systems that move metrics — 90% faster BI reporting and AI agents shipping to real users every day.</p>
           <div class="space-y-2">
             <div class="pillar-bullet">
               <div class="pillar-bullet-dot bg-teal-400"></div>
@@ -763,7 +815,7 @@
             Running<br>with Rami
           </h2>
           <p class="text-base text-[#374151] leading-relaxed font-medium">
-            For 11 years, I've been running alongside PTSD veterans in Jerusalem. Every week, before any product meeting or strategy deck.
+            For 11 years, I've been running alongside PTSD veterans. Every week, before any product meeting or strategy deck.
           </p>
           <p class="text-sm text-[#6b7280] mt-4 leading-relaxed">
             Leading 100+ person communities isn't just about logistics - it's about showing up, every week, for what matters. Running for Resilience.
@@ -839,7 +891,7 @@
     <section id="contact" class="py-14 sm:py-20 max-w-6xl mx-auto px-4 sm:px-6">
 
       <!-- Full-width contact block - dark with warm overtone, not a card clone -->
-      <div class="contact-block bento-card bento-card-dark p-8 sm:p-10 lg:p-12">
+      <div class="contact-block bento-card bento-card-dark p-5 sm:p-10 lg:p-12">
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
           <div>
