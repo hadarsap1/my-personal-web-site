@@ -403,10 +403,13 @@
   var HASH = 'e001dad6f306c7ddb4c0662753355f15214ca8f3cfa19f8c215530c3ac7a3764';
   var COLORS = ['#3b82f6','#22d3ee','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#6366f1'];
 
+  var OWNER_IP_HASHES = ['d382c639337b5bbede9a7d40c3e0ffd5566ab85be483e392eb9d07b6f6b3bf78'];
+
   var allVisits = [];
   var filteredVisits = [];
   var filterFromDate = null;
   var blockedHashes = JSON.parse(localStorage.getItem('dash_blocked_ips') || '[]');
+  OWNER_IP_HASHES.forEach(function(h) { if (blockedHashes.indexOf(h) === -1) blockedHashes.push(h); });
   var myIpHash = null;
 
   // ── Password Gate ──
