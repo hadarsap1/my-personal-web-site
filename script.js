@@ -86,8 +86,16 @@ function initD3Map() {
   g = svg.append('g');
 
   // Zoom & pan
+  // On touch devices, only respond to pinch (≥2 touches) so a single-finger
+  // vertical swipe scrolls the page instead of panning the map.
   zoom = d3.zoom()
     .scaleExtent([1, 8])
+    .filter((event) => {
+      if (event.type === 'wheel') return !event.ctrlKey;
+      if (event.type === 'touchstart') return event.touches && event.touches.length >= 2;
+      // mousedown, dblclick, etc. on desktop
+      return !event.ctrlKey && !event.button;
+    })
     .on('zoom', (event) => {
       g.attr('transform', event.transform);
     });
@@ -579,9 +587,38 @@ function initApiCard() {
 initApiCard();
 
 // ===================================================================
-// CHIP TILT (physical hover)
+// THEME TOGGLE (dark / light)
 // ===================================================================
-if (!prefersReducedMotion) {
+(function initThemeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+
+  const apply = (theme) => {
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    // Label describes the action, matching the visible icon (moon=go dark, sun=go light)
+    const nextLabel = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    btn.setAttribute('aria-label', nextLabel);
+    btn.setAttribute('title', nextLabel);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0a0e1a' : '#f8f9fa');
+  };
+
+  apply(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+})();
+
+// ===================================================================
+// CHIP TILT (physical hover - desktop only)
+// ===================================================================
+const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if (!prefersReducedMotion && supportsHover) {
   document.querySelectorAll('.chip-interactive').forEach((chip) => {
     chip.addEventListener('mousemove', (e) => {
       const rect = chip.getBoundingClientRect();
