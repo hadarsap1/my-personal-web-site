@@ -447,7 +447,7 @@
       return;
     }
     var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    var result = await sb.from('visits').select('*').order('visited_at', { ascending: false }).limit(10000);
+    var result = await sb.from('visits').select('*').gte('time_spent_s', 10).order('visited_at', { ascending: false }).limit(10000);
     if (result.error || !result.data) { document.getElementById('dashboard').innerHTML = '<div class="dash-loading">Error loading data.</div>'; return; }
     allVisits = result.data;
     detectMyIp();
@@ -566,6 +566,11 @@
         return !v.ip_hash || blockedHashes.indexOf(v.ip_hash) === -1;
       });
     }
+
+    // Always exclude sub-10s visits (bots / accidental loads)
+    base = base.filter(function (v) {
+      return (v.time_spent_s || 0) >= 10;
+    });
 
     if (filterFromDate) {
       base = base.filter(function (v) {
