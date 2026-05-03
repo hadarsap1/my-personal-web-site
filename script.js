@@ -447,16 +447,16 @@ function initTerminal() {
   const outputEl = document.getElementById('terminal-output');
   if (!cmdEl || !caretEl || !outputEl) return;
 
-  const COMMAND = './fetch-skills.sh';
+  const COMMAND = './launch-product.sh';
   const OUTPUT_LINES = [
-    { text: 'Initializing profile scanner...', cls: 'dim' },
-    { text: 'Connecting to experience database...', cls: 'dim' },
-    { text: '[OK] 13+ years of SaaS and AI product leadership', cls: 'ok' },
-    { text: '[OK] 90% time saved on BI reporting pipelines', cls: 'ok' },
-    { text: '[OK] Built QA, BI, and product functions from scratch', cls: 'ok' },
-    { text: '[OK] 3 custom AI agents running in production', cls: 'ok' },
-    { text: '[OK] 25+ countries, one relentless growth mindset', cls: 'ok' },
-    { text: 'Profile loaded. Ready to ship.', cls: 'accent' },
+    { text: 'Initializing leadership profile...', cls: 'dim' },
+    { text: 'Loading career context...', cls: 'dim' },
+    { text: '[OK] Product strategy aligned with business KPIs', cls: 'ok' },
+    { text: '[OK] Cross-functional teams led across 4 continents', cls: 'ok' },
+    { text: '[OK] 0-to-1 AI products shipped — 3 times', cls: 'ok' },
+    { text: '[OK] Enterprise scale + startup speed unlocked', cls: 'ok' },
+    { text: '[OK] BI pipelines cut reporting time by 90%', cls: 'ok' },
+    { text: 'Ready to build from within.', cls: 'accent' },
   ];
   let hasRun = false;
 
