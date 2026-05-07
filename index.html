@@ -43,7 +43,10 @@
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
           },
-          colors: {}
+          colors: {
+            'teal-action': 'var(--color-teal)',
+            'teal-deep':   'var(--color-teal-deep)',
+          }
         }
       }
     }
@@ -161,6 +164,7 @@
               alt="Hadar Sapir"
               width="320"
               height="420"
+              fetchpriority="high"
               class="w-full h-auto md:h-full md:object-cover"
               onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 420%22%3E%3Crect fill=%22%23ede4d0%22 width=%22320%22 height=%22420%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238a8070%22 font-size=%2280%22 font-family=%22Inter,sans-serif%22%3EHS%3C/text%3E%3C/svg%3E'"
             >
@@ -251,7 +255,7 @@
           <div class="logo-item">
             <img src="logos/storenext-color.png" alt="StoreNext" class="logo-img" loading="lazy">
           </div>
-          <!-- Set 2 — duplicate for seamless infinite loop -->
+          <!-- Set 2 - duplicate for seamless infinite loop -->
           <div class="logo-item" aria-hidden="true">
             <img src="logos/arpalus-color.svg" alt="" class="logo-img" loading="lazy">
           </div>
@@ -270,74 +274,63 @@
 
     <!-- ===== THREE PILLARS ===== -->
     <section id="pillars" class="py-10 sm:py-14 max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+      <!-- Tab nav -->
+      <div class="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="What I bring">
+        <button id="pillar-tab-0" class="pillar-tab text-sm font-semibold px-5 py-2.5 rounded-full border transition-colors cursor-pointer" data-pillar="0" role="tab" aria-selected="true" aria-controls="pillar-panel-0">
+          <span class="pillar-tab-num font-black mr-1.5">01</span>SaaS Leadership
+        </button>
+        <button id="pillar-tab-1" class="pillar-tab text-sm font-semibold px-5 py-2.5 rounded-full border transition-colors cursor-pointer" data-pillar="1" role="tab" aria-selected="false" aria-controls="pillar-panel-1">
+          <span class="pillar-tab-num font-black mr-1.5">02</span>AI Architecture
+        </button>
+        <button id="pillar-tab-2" class="pillar-tab text-sm font-semibold px-5 py-2.5 rounded-full border transition-colors cursor-pointer" data-pillar="2" role="tab" aria-selected="false" aria-controls="pillar-panel-2">
+          <span class="pillar-tab-num font-black mr-1.5">03</span>Community Impact
+        </button>
+      </div>
 
-        <!-- Pillar 1: SaaS Leadership -->
-        <div class="bento-card p-6 sm:p-7 fade-in">
-          <div class="pillar-icon pillar-icon-saas">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[#111827] mb-1 tracking-tight">SaaS Leadership</h3>
-          <p class="text-[11px] font-semibold text-blue-600 tracking-wide uppercase mb-1.5">Scale of an Enterprise. Agility of a Startup.</p>
-          <p class="text-sm text-[#6b7280] leading-relaxed mb-4">13+ years bridging complex AI &amp; data capabilities with strategic business growth — at Nestlé, Kimberly-Clark, and early-stage startups.</p>
-          <div class="space-y-2">
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-blue-400"></div>
-              <span>0 to 1 product builds, three times</span>
+      <!-- Panel card -->
+      <div class="bento-card p-8 sm:p-10 fade-in">
+
+        <!-- Panel 0: SaaS Leadership -->
+        <div class="pillar-panel" id="pillar-panel-0" role="tabpanel" aria-labelledby="pillar-tab-0">
+          <div class="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-8 md:gap-14 items-start">
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-bold text-[#111827] mb-4 tracking-tight leading-tight">SaaS Leadership</h3>
+              <p class="text-base text-[#6b7280] leading-relaxed">13+ years and 3 products built 0-to-1 - at Nestlé, Kimberly-Clark, and early-stage startups. Strategy and shipping, not just slides.</p>
             </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-blue-400"></div>
-              <span>Cross-functional teams across 4 continents</span>
-            </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-blue-400"></div>
-              <span>In-house builder, not an outside consultant</span>
+            <div class="space-y-4">
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-blue-400"></div><span>QA, BI, and product functions built from scratch</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-blue-400"></div><span>Cross-functional teams across 4 continents</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-blue-400"></div><span>In-house builder, not an outside consultant</span></div>
             </div>
           </div>
         </div>
 
-        <!-- Pillar 2: AI Architecture -->
-        <div class="bento-card p-6 sm:p-7 fade-in">
-          <div class="pillar-icon pillar-icon-ai">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[#111827] mb-1.5 tracking-tight">AI Architecture</h3>
-          <p class="text-sm text-[#6b7280] leading-relaxed mb-4">Not just prompting. Production AI systems that move metrics — 90% faster BI reporting and AI agents shipping to real users every day.</p>
-          <div class="space-y-2">
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-teal-400"></div>
-              <span>Computer vision and ML product experience</span>
+        <!-- Panel 1: AI Architecture -->
+        <div class="pillar-panel hidden" id="pillar-panel-1" role="tabpanel" aria-labelledby="pillar-tab-1">
+          <div class="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-8 md:gap-14 items-start">
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-bold text-[#111827] mb-4 tracking-tight leading-tight">AI Architecture</h3>
+              <p class="text-base text-[#6b7280] leading-relaxed">Not just prompting. Production AI systems that move metrics - computer vision, LLM agents, and BI automation shipping to real users every day.</p>
             </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-teal-400"></div>
-              <span>LLM agent design and deployment</span>
-            </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-teal-400"></div>
-              <span>BI automation at enterprise scale</span>
+            <div class="space-y-4">
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-teal-400"></div><span>Computer vision and ML product experience</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-teal-400"></div><span>LLM agent design and deployment</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-teal-400"></div><span>BI automation at enterprise scale</span></div>
             </div>
           </div>
         </div>
 
-        <!-- Pillar 3: Community Impact -->
-        <div class="bento-card p-6 sm:p-7 fade-in">
-          <div class="pillar-icon pillar-icon-community">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
-          </div>
-          <h3 class="text-base font-bold text-[#111827] mb-1.5 tracking-tight">Community Impact</h3>
-          <p class="text-sm text-[#6b7280] leading-relaxed mb-4">Building more than products. Running with Rami is a movement using running to create connection, resilience, and shared purpose.</p>
-          <div class="space-y-2">
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-green-400"></div>
-              <span>Founder, Running with Rami</span>
+        <!-- Panel 2: Community Impact -->
+        <div class="pillar-panel hidden" id="pillar-panel-2" role="tabpanel" aria-labelledby="pillar-tab-2">
+          <div class="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-8 md:gap-14 items-start">
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-bold text-[#111827] mb-4 tracking-tight leading-tight">Community Impact</h3>
+              <p class="text-base text-[#6b7280] leading-relaxed">Building more than products. Running with Rami is a movement using running to create connection, resilience, and shared purpose.</p>
             </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-green-400"></div>
-              <span>25+ countries, one mindset</span>
-            </div>
-            <div class="pillar-bullet">
-              <div class="pillar-bullet-dot bg-green-400"></div>
-              <span>Community as a leadership principle</span>
+            <div class="space-y-4">
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-green-400"></div><span>Founder, Running with Rami</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-green-400"></div><span>25+ countries, one mindset</span></div>
+              <div class="pillar-bullet"><div class="pillar-bullet-dot bg-green-400"></div><span>Community as a leadership principle</span></div>
             </div>
           </div>
         </div>
@@ -363,12 +356,12 @@
             <div class="terminal-dots">
               <span></span><span></span><span></span>
             </div>
-            <span class="gitlog-title">hadar/career &nbsp;—&nbsp; git log --oneline --graph</span>
+            <span class="gitlog-title">hadar/career &nbsp;-&nbsp; git log --oneline --graph</span>
           </div>
           <div class="gitlog-body">
 
             <!-- Commit 1: Arpalus -->
-            <div class="gitlog-commit" data-gitlog="0">
+            <div class="gitlog-commit" data-gitlog="0" tabindex="0" role="button" aria-expanded="false" aria-controls="gitlog-detail-0">
               <div class="gitlog-graph-col">
                 <span class="gitlog-star">*</span>
                 <div class="gitlog-vline"></div>
@@ -393,7 +386,7 @@
             </div>
 
             <!-- Commit 2: Nestlé & KC -->
-            <div class="gitlog-commit" data-gitlog="1">
+            <div class="gitlog-commit" data-gitlog="1" tabindex="0" role="button" aria-expanded="false" aria-controls="gitlog-detail-1">
               <div class="gitlog-graph-col">
                 <span class="gitlog-star">*</span>
                 <div class="gitlog-vline"></div>
@@ -417,7 +410,7 @@
             </div>
 
             <!-- Commit 3: StoreNext -->
-            <div class="gitlog-commit" data-gitlog="2">
+            <div class="gitlog-commit" data-gitlog="2" tabindex="0" role="button" aria-expanded="false" aria-controls="gitlog-detail-2">
               <div class="gitlog-graph-col">
                 <span class="gitlog-star">*</span>
               </div>
@@ -443,7 +436,7 @@
         </div>
 
         <!-- Right column: two stacked cards with different treatments -->
-        <div class="flex flex-col gap-4 sm:gap-5">
+        <div class="flex flex-col gap-4 sm:gap-5 h-full">
 
           <!-- Dark CTA card - inverted, creates contrast in the column -->
           <div class="bento-card bento-card-dark p-6 flex flex-col justify-between">
@@ -460,7 +453,7 @@
           </div>
 
           <!-- Impact metrics - text-forward, not identical boxes -->
-          <div class="bento-card p-7">
+          <div class="bento-card p-7 flex-1">
             <p class="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#6b7280] mb-5">Impact</p>
             <div class="space-y-4">
               <div>
@@ -497,7 +490,7 @@
           <span class="testimonial-tag">AI Product Leadership</span>
           <blockquote class="testimonial-quote flex-1">
             <span class="testimonial-mark" aria-hidden="true">&ldquo;</span>
-            <span class="testimonial-text">Hadar has a rare strength in diving deep into sophisticated technologies and distilling them into products that make sense&hellip; building the product function from zero to one.</span>
+            <p class="testimonial-text">Hadar has a rare strength in diving deep into sophisticated technologies and distilling them into products that make sense&hellip; building the product function from zero to one.</p>
           </blockquote>
           <footer class="testimonial-footer">
             <div class="flex items-center justify-between gap-3">
@@ -517,7 +510,7 @@
           <span class="testimonial-tag">Strategic Execution</span>
           <blockquote class="testimonial-quote flex-1">
             <span class="testimonial-mark" aria-hidden="true">&ldquo;</span>
-            <span class="testimonial-text">Hadar stood out with his ability to balance long-term strategy with day-to-day operational excellence.</span>
+            <p class="testimonial-text">Hadar stood out with his ability to balance long-term strategy with day-to-day operational excellence.</p>
           </blockquote>
           <footer class="testimonial-footer">
             <div class="flex items-center justify-between gap-3">
@@ -537,7 +530,7 @@
           <span class="testimonial-tag">Team Management</span>
           <blockquote class="testimonial-quote flex-1">
             <span class="testimonial-mark" aria-hidden="true">&ldquo;</span>
-            <span class="testimonial-text">A fantastic leader, always proactively finding new angles and solutions.</span>
+            <p class="testimonial-text">A fantastic leader, always proactively finding new angles and solutions.</p>
           </blockquote>
           <footer class="testimonial-footer">
             <div class="flex items-center justify-between gap-3">
@@ -572,7 +565,7 @@
             <div>
               <span class="inline-block text-[10px] font-semibold tracking-[0.12em] uppercase text-teal-400 mb-4">Featured Project</span>
               <h3 class="text-2xl sm:text-3xl font-black text-[#f9fafb] tracking-tight leading-tight mb-2">Clearday</h3>
-              <p class="text-[11px] text-teal-400/80 font-medium italic leading-snug mb-2">Wartime disruptions shattered school routines — parents needed coordination infrastructure that didn't exist yet.</p>
+              <p class="text-[11px] text-teal-400/80 font-medium italic leading-snug mb-2">Wartime disruptions shattered school routines - parents needed coordination infrastructure that didn't exist yet.</p>
               <p class="text-sm text-[#9ca3af] leading-relaxed mb-6">
                 Built a full-stack scheduling platform for Israeli schools during wartime. Parents coordinate schedules, discover playdates, and get daily email digests. Multi-school admin dashboards with role-based access.
               </p>
@@ -642,29 +635,27 @@
         </div>
       </div>
 
-      <!-- Project Grid - 3 columns on desktop, 2x3 layout -->
+      <!-- Project Grid - 3 columns, rows 1+2 balanced, SVMoney full-width on row 3 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
 
         <!-- Wine Tracker -->
         <a href="https://winetracker2026.web.app/" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🍷</span>
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🍷</span>
             <div>
-              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-rose-600 transition-colors">Wine Tracker</h3>
-              <p class="text-[11px] text-rose-600 font-medium">Personal Collection</p>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">Wine Tracker</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">Personal Collection</p>
             </div>
           </div>
-          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Wine collectors lose track of what they own and why they bought it — spreadsheets don't capture the story behind the bottle.</p>
-          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">
-            Track and manage a personal wine collection with tasting notes, ratings, and cellar organization.
-          </p>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Wine collectors lose track of what they own and why they bought it - spreadsheets don't capture the story behind the bottle.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Track and manage a personal wine collection with tasting notes, ratings, and cellar organization.</p>
           <div class="flex flex-wrap gap-1 mb-3">
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-rose-50 text-rose-500">React Native</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-rose-50 text-rose-500">Expo</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-rose-50 text-rose-500">TypeScript</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-rose-50 text-rose-500">Firebase</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">React Native</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Expo</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">TypeScript</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Firebase</span>
           </div>
-          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-rose-500 transition-colors flex items-center gap-1">
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
             Try the live app
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
           </span>
@@ -673,23 +664,21 @@
         <!-- Homebound -->
         <a href="https://hadars-projects-18fb0810.vercel.app" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🏠</span>
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🏠</span>
             <div>
-              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-amber-600 transition-colors">Homebound</h3>
-              <p class="text-[11px] text-amber-600 font-medium">Home Buying Strategy Hub</p>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">Homebound</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">Home Buying Strategy Hub</p>
             </div>
           </div>
-          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Home buying creates partner friction and decision fatigue — no tool existed to align two people's priorities in real time.</p>
-          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">
-            Decision support for couples buying homes. Track properties through a funnel, auto-extract listings, collaborative partner ratings with disagreement flags, and interactive map view.
-          </p>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Home buying creates partner friction and decision fatigue - no tool existed to align two people's priorities in real time.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Decision support for couples buying homes. Track properties through a funnel, auto-extract listings, collaborative partner ratings with disagreement flags, and interactive map view.</p>
           <div class="flex flex-wrap gap-1 mb-3">
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-amber-50 text-amber-600">Next.js</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-amber-50 text-amber-600">Supabase</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-amber-50 text-amber-600">Leaflet</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-amber-50 text-amber-600">Playwright</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Next.js</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Supabase</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Leaflet</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Playwright</span>
           </div>
-          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-amber-500 transition-colors flex items-center gap-1">
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
             Try the live app
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
           </span>
@@ -698,125 +687,118 @@
         <!-- Buffalo Kahanov -->
         <a href="https://buffalo-kahanov-mzqt.vercel.app" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-10 h-10 rounded-xl bg-[#fdf2f2] border border-[#fde8e8] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🥩</span>
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🥩</span>
             <div>
-              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#800000] transition-colors">Buffalo Kahanov</h3>
-              <p class="text-[11px] text-[#800000] font-medium">Premium E-Commerce</p>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">Buffalo Kahanov</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">Premium E-Commerce</p>
             </div>
           </div>
-          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Premium local producers were losing customers who expect a modern browsing experience — phone orders and Instagram DMs don't scale.</p>
-          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">
-            E-commerce for a premium meat boutique. Sanity CMS product catalog, cart with Zustand, WhatsApp checkout flow. Hebrew RTL, dark luxury aesthetic.
-          </p>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Premium local producers were losing customers who expect a modern browsing experience - phone orders and Instagram DMs don't scale.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">E-commerce for a premium meat boutique. Sanity CMS product catalog, cart with Zustand, WhatsApp checkout flow. Hebrew RTL, dark luxury aesthetic.</p>
           <div class="flex flex-wrap gap-1 mb-3">
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#fdf2f2] text-[#800000]">Next.js 15</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#fdf2f2] text-[#800000]">Sanity</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#fdf2f2] text-[#800000]">Zustand</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Next.js 15</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Sanity</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Zustand</span>
           </div>
-          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#800000] transition-colors flex items-center gap-1">
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
             Try the live app
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
           </span>
         </a>
 
-        <!-- EllaEng + Space Quest (combined card) -->
-        <div class="bento-card bg-[#fafafa] p-6 sm:p-7 flex flex-col gap-4">
-          <!-- EllaEng -->
-          <a href="https://hadarsap1.github.io/ella-eng/#/game/word-builder" target="_blank" rel="noopener" class="group flex flex-col flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-9 h-9 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">🚀</span>
-              <div>
-                <h3 class="text-sm font-bold text-[#111827] tracking-tight group-hover:text-sky-600 transition-colors">EllaEng</h3>
-                <p class="text-[10px] text-sky-600 font-medium">EdTech for Kids</p>
-              </div>
+        <!-- EllaEng -->
+        <a href="https://hadarsap1.github.io/ella-eng/#/game/word-builder" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🚀</span>
+            <div>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">EllaEng</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">EdTech for Kids</p>
             </div>
-            <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-1.5">Kids disengage from English apps with flat UX — wrapping vocabulary in a progression-driven adventure makes them come back.</p>
-            <p class="text-xs text-[#6b7280] leading-relaxed mb-2">
-              Space-themed adventure game teaching English to children. Progressive difficulty, visual rewards, and engagement mechanics for young learners.
-            </p>
-            <div class="flex flex-wrap gap-1 mb-2">
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-sky-600">React</span>
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-sky-600">TypeScript</span>
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-sky-50 text-sky-600">Vite</span>
+          </div>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Kids disengage from English apps with flat UX - wrapping vocabulary in a progression-driven adventure makes them come back.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Space-themed adventure game teaching English to children. Progressive difficulty, visual rewards, and engagement mechanics for young learners.</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">React</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">TypeScript</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Vite</span>
+          </div>
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
+            Try the live app
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </a>
+
+        <!-- Space Quest -->
+        <a href="https://space-quest-three.vercel.app/" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🧠</span>
+            <div>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">Space Quest</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">Learning Game for Gifted Kids</p>
             </div>
-            <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-sky-500 transition-colors flex items-center gap-1">
-              Try the live app
-              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-            </span>
-          </a>
-          <div class="border-t border-[#f3f4f6]"></div>
-          <!-- Space Quest -->
-          <a href="https://space-quest-three.vercel.app/" target="_blank" rel="noopener" class="group flex flex-col flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-9 h-9 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">🧠</span>
-              <div>
-                <h3 class="text-sm font-bold text-[#111827] tracking-tight group-hover:text-purple-600 transition-colors">Space Quest</h3>
-                <p class="text-[10px] text-purple-600 font-medium" lang="he" dir="rtl">משחק למידה למחוננים</p>
-              </div>
-            </div>
-            <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-1.5">Gifted programs lacked self-paced digital tools — static worksheets don't match the challenge intensity these kids need.</p>
-            <p class="text-xs text-[#6b7280] leading-relaxed mb-2">
-              Challenge-based learning game for gifted children. Logic puzzles, pattern recognition, and critical thinking — wrapped in a space adventure.
-            </p>
-            <div class="flex flex-wrap gap-1 mb-2">
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-purple-50 text-purple-500">React</span>
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-purple-50 text-purple-500">TypeScript</span>
-              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-purple-50 text-purple-500">Vite</span>
-            </div>
-            <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-purple-500 transition-colors flex items-center gap-1">
-              Try the live app
-              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-            </span>
-          </a>
-        </div>
+          </div>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Gifted programs lacked self-paced digital tools - static worksheets don't match the challenge intensity these kids need.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Challenge-based learning game for gifted children. Logic puzzles, pattern recognition, and critical thinking - wrapped in a space adventure.</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">React</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">TypeScript</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Vite</span>
+          </div>
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
+            Try the live app
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </a>
 
         <!-- Recipes App -->
         <a href="https://recipes-app-weld-six.vercel.app/" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🍳</span>
+            <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">🍳</span>
             <div>
-              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-orange-600 transition-colors">Recipes</h3>
-              <p class="text-[11px] text-orange-600 font-medium">Family Recipe Book</p>
+              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">Recipes</h3>
+              <p class="text-[11px] text-[#0d9488] font-medium">Family Recipe Book</p>
             </div>
           </div>
-          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Family recipes live in notebooks no one can search — this gives a family a living, collaborative cookbook accessible from any device.</p>
-          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">
-            Hebrew recipe app with search, category filtering, featured carousel, favorites, and the ability to add your own recipes. Persistent local storage.
-          </p>
+          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Family recipes live in notebooks no one can search - this gives a family a living, collaborative cookbook accessible from any device.</p>
+          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Hebrew recipe app with search, category filtering, featured carousel, favorites, and the ability to add your own recipes. Persistent local storage.</p>
           <div class="flex flex-wrap gap-1 mb-3">
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-orange-50 text-orange-500">React</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-orange-50 text-orange-500">Vite</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-orange-50 text-orange-500">JavaScript</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">React</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Vite</span>
+            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">JavaScript</span>
           </div>
-          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-orange-500 transition-colors flex items-center gap-1">
+          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
             Try the live app
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
           </span>
         </a>
 
-        <!-- SVMoney -->
-        <a href="https://github.com/hadarsap1/SVMONEY" target="_blank" rel="noopener" class="bento-card p-6 sm:p-7 block group cursor-pointer">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-10 h-10 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">💰</span>
-            <div>
-              <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-violet-600 transition-colors">SVMoney</h3>
-              <p class="text-[11px] text-violet-600 font-medium">Personal Finance OS</p>
+        <!-- SVMoney - full-width featured row -->
+        <a href="https://github.com/hadarsap1/SVMONEY" target="_blank" rel="noopener" class="bento-card p-6 sm:p-8 block group cursor-pointer lg:col-span-3">
+          <div class="flex flex-col lg:flex-row lg:gap-12 lg:items-start">
+            <div class="lg:flex-1 mb-4 lg:mb-0">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="w-10 h-10 rounded-xl bg-[#f9fafb] border border-[#f3f4f6] flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">💰</span>
+                <div>
+                  <h3 class="text-base font-bold text-[#111827] tracking-tight group-hover:text-[#0d9488] transition-colors">SVMoney</h3>
+                  <p class="text-[11px] text-[#0d9488] font-medium">Personal Finance OS</p>
+                </div>
+              </div>
+              <p class="text-[10px] text-[#374151] font-medium italic leading-snug">Israeli banks have no open API - getting a unified financial view meant building the connector layer from scratch, privately.</p>
+            </div>
+            <div class="lg:flex-1">
+              <p class="text-xs text-[#6b7280] leading-relaxed mb-4">Privacy-first financial intelligence. Scrapes Israeli bank accounts, auto-categorizes transactions, anomaly detection, and budget forecasting. Self-hosted with AES-256 encryption.</p>
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Fastify</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">React 19</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">Puppeteer</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-[#f3f4f6] text-[#6b7280]">SQLite</span>
+              </div>
+              <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-[#0d9488] transition-colors flex items-center gap-1">
+                View on GitHub
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+              </span>
             </div>
           </div>
-          <p class="text-[10px] text-[#374151] font-medium italic leading-snug mb-2">Israeli banks have no open API — getting a unified financial view meant building the connector layer from scratch, privately.</p>
-          <p class="text-xs text-[#6b7280] leading-relaxed mb-4">
-            Privacy-first financial intelligence. Scrapes Israeli bank accounts, auto-categorizes transactions, anomaly detection, and budget forecasting. Self-hosted with AES-256 encryption.
-          </p>
-          <div class="flex flex-wrap gap-1 mb-3">
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-violet-50 text-violet-500">Fastify</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-violet-50 text-violet-500">React 19</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-violet-50 text-violet-500">Puppeteer</span>
-            <span class="text-[9px] font-medium px-1.5 py-0.5 rounded bg-violet-50 text-violet-500">SQLite</span>
-          </div>
-          <span class="text-[11px] font-semibold text-[#9ca3af] group-hover:text-violet-500 transition-colors flex items-center gap-1">
-            View on GitHub
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-          </span>
         </a>
 
       </div>
@@ -854,7 +836,7 @@
           <div id="map-container" class="relative w-full h-[300px] sm:h-[480px] lg:h-[520px] overflow-hidden cursor-grab active:cursor-grabbing">
             <div class="map-skeleton absolute inset-0 flex items-center justify-center text-gray-500 text-sm">Loading map...</div>
             <svg id="world-map"></svg>
-            <div id="map-tooltip" class="glass-tooltip" style="display:none;"></div>
+            <div id="map-tooltip" class="glass-tooltip" role="tooltip" style="display:none;"></div>
             <button class="absolute top-3 right-3 z-[5] px-3 py-1.5 bg-black/50 backdrop-blur-md border border-white/10 rounded-lg text-gray-400 text-xs font-medium hover:text-white hover:border-white/20 transition-colors cursor-pointer" aria-label="Reset map view">Reset view</button>
           </div>
         </div>
@@ -898,7 +880,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 items-stretch">
 
         <!-- Left: large editorial text block -->
-        <div class="bento-card p-8 sm:p-12 mission-card-primary">
+        <div class="bento-card p-8 sm:p-12 mission-card-primary flex flex-col">
           <p class="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#6b7280] mb-6">Voluntary Leadership</p>
           <h2 class="text-[clamp(2.2rem,5vw,3.2rem)] font-black text-[#111827] tracking-[-0.035em] leading-[1.05] mb-6">
             Running<br>with Rami
@@ -907,10 +889,31 @@
             For 11 years, I've been running alongside PTSD veterans. Every week, before any product meeting or strategy deck.
           </p>
           <p class="text-sm text-[#6b7280] mt-4 leading-relaxed">
-            Leading 100+ person communities isn't just about logistics - it's about showing up, every week, for what matters. Running for Resilience.
+            Leading 100+ person communities isn't just about logistics - it's about showing up, every week, for what matters.
           </p>
 
-          <div class="mt-8 grid grid-cols-3 gap-3">
+          <div class="mt-8 space-y-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </span>
+              <span class="text-sm text-[#374151]">Consistency over motivation</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </span>
+              <span class="text-sm text-[#374151]">Empathy as a strategic tool</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3.5 h-3.5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </span>
+              <span class="text-sm text-[#374151]">Community thinking at scale</span>
+            </div>
+          </div>
+
+          <div class="mt-auto pt-8 grid grid-cols-3 gap-3">
             <div class="bg-white/50 rounded-xl p-3 text-center border border-white/40">
               <span class="text-2xl sm:text-3xl font-black tracking-tight block gradient-number">11</span>
               <p class="text-[11px] text-[#9ca3af] mt-1 leading-tight">Years volunteering</p>
@@ -935,8 +938,8 @@
             <img src="mission-running.png" alt="Runners at sunrise - Running with Rami community" class="w-full h-48 sm:h-56 object-cover" loading="lazy">
           </div>
 
-          <!-- Pull quote card - blue accent -->
-          <div class="bento-card bento-card-accent p-7 sm:p-8 flex-1">
+          <!-- Pull quote card -->
+          <div class="bento-card bento-card-accent p-7 sm:p-8 flex-1 flex flex-col justify-center">
             <p class="text-lg sm:text-xl font-bold text-[#111827] leading-snug tracking-tight">
               "Leading people under pressure isn't a skill you learn in a boardroom."
             </p>
@@ -945,31 +948,6 @@
             </p>
           </div>
 
-          <!-- Context card - ties it back to professional self -->
-          <div class="bento-card p-7 flex-1">
-            <p class="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#6b7280] mb-4">Why it matters</p>
-            <p class="text-sm text-[#374151] leading-relaxed">
-              The same qualities that make a good community leader - consistency, empathy, showing up when it's hard - are exactly what I bring to product leadership.
-            </p>
-            <div class="mt-5 flex items-center gap-2.5">
-              <span class="w-8 h-8 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </span>
-              <span class="text-xs text-[#6b7280]">Consistency over motivation</span>
-            </div>
-            <div class="mt-3 flex items-center gap-2.5">
-              <span class="w-8 h-8 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </span>
-              <span class="text-xs text-[#6b7280]">Empathy as a strategic tool</span>
-            </div>
-            <div class="mt-3 flex items-center gap-2.5">
-              <span class="w-8 h-8 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </span>
-              <span class="text-xs text-[#6b7280]">Community thinking at scale</span>
-            </div>
-          </div>
 
         </div>
 

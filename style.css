@@ -4,6 +4,18 @@
    All color / spacing defaults handled by Tailwind.
    ========================================================================== */
 
+:root {
+  --color-teal:        #0d9488;
+  --color-teal-deep:   #0f766e;
+  --color-teal-light:  #2dd4bf;
+  --color-teal-subtle: #5eead4;
+  --color-cyan:        #22d3ee;
+  --color-night:       #0a0e1a;
+  --color-panel:       #0d1117;
+  --color-ink:         #111827;
+  --color-day:         #f9fafb;
+}
+
 
 /* ==========================================================================
    SCROLLING / PAGE BASELINE
@@ -38,11 +50,9 @@ section[id] {
    ========================================================================== */
 
 .bento-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.04),
     0 2px 8px rgb(0 0 0 / 0.03);
@@ -137,12 +147,9 @@ section[id] {
   width: 5.5rem;
 }
 
-/* Gradient text for impact numbers */
+/* Impact numbers — solid Action Teal, no gradient */
 .gradient-number {
-  background: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-teal);
 }
 
 .fact-label {
@@ -810,7 +817,7 @@ section[id] {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.9375rem;
   color: #4b5563;
 }
 
@@ -1413,9 +1420,9 @@ html.dark .theme-toggle:hover {
   color: #ffffff;
 }
 
-/* Default light bento card -> dark glassy card */
+/* Default light bento card -> dark card */
 html.dark .bento-card {
-  background: rgba(31, 41, 55, 0.55);
+  background: rgba(31, 41, 55, 0.85);
   border-color: rgba(255, 255, 255, 0.06);
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.4),

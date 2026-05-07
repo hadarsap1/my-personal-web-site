@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-07T00:00:00Z",
+  "title": "Design System: Hadar Sapir — Personal Site",
+  "extensions": {
+    "colorMeta": {
+      "teal-action":      { "role": "primary",   "displayName": "Action Teal",     "canonical": "#0d9488", "tonalRamp": ["#021a18","#044034","#076b58","#0a8070","#0d9488","#14b8a6","#5eead4","#ccfbf1"] },
+      "teal-deep":        { "role": "primary",   "displayName": "Action Teal Deep","canonical": "#0f766e", "tonalRamp": ["#021a18","#044034","#076b58","#0a8070","#0f766e","#0d9488","#5eead4","#ccfbf1"] },
+      "teal-light":       { "role": "secondary", "displayName": "Teal Light",      "canonical": "#2dd4bf", "tonalRamp": ["#021a18","#044034","#0a8070","#14b8a6","#2dd4bf","#5eead4","#99f6e4","#ccfbf1"] },
+      "teal-subtle":      { "role": "secondary", "displayName": "Teal Subtle",     "canonical": "#5eead4", "tonalRamp": ["#021a18","#0a8070","#14b8a6","#2dd4bf","#5eead4","#99f6e4","#ccfbf1","#f0fdfa"] },
+      "cyan-signal":      { "role": "tertiary",  "displayName": "Signal Cyan",     "canonical": "#22d3ee", "tonalRamp": ["#041a1e","#07374a","#0e6a8a","#14a0bf","#22d3ee","#67e8f9","#a5f3fc","#e0f9ff"] },
+      "night-canvas":     { "role": "neutral",   "displayName": "Night Canvas",    "canonical": "#0a0e1a", "tonalRamp": ["#030408","#0a0e1a","#111827","#1f2937","#374151","#6b7280","#9ca3af","#d1d5db"] },
+      "panel-dark":       { "role": "neutral",   "displayName": "Panel Dark",      "canonical": "#0d1117", "tonalRamp": ["#050810","#0d1117","#161b22","#21262d","#30363d","#6b7280","#9ca3af","#e6edf3"] },
+      "panel-dark-border":{ "role": "neutral",   "displayName": "Panel Border",    "canonical": "#30363d", "tonalRamp": ["#0d1117","#161b22","#21262d","#30363d","#484f58","#6b7280","#9ca3af","#d0d7de"] },
+      "ink":              { "role": "neutral",   "displayName": "Ink",             "canonical": "#111827", "tonalRamp": ["#030408","#111827","#1f2937","#374151","#6b7280","#9ca3af","#d1d5db","#f9fafb"] },
+      "gray-mid":         { "role": "neutral",   "displayName": "Gray Mid",        "canonical": "#374151", "tonalRamp": ["#111827","#1f2937","#374151","#4b5563","#6b7280","#9ca3af","#d1d5db","#f9fafb"] },
+      "gray-soft":        { "role": "neutral",   "displayName": "Gray Soft",       "canonical": "#6b7280", "tonalRamp": ["#374151","#4b5563","#6b7280","#9ca3af","#d1d5db","#e5e7eb","#f3f4f6","#f9fafb"] },
+      "gray-muted":       { "role": "neutral",   "displayName": "Gray Muted",      "canonical": "#9ca3af", "tonalRamp": ["#4b5563","#6b7280","#9ca3af","#d1d5db","#e5e7eb","#f3f4f6","#f9fafb","#ffffff"] },
+      "gray-border":      { "role": "neutral",   "displayName": "Gray Border",     "canonical": "#e5e7eb", "tonalRamp": ["#6b7280","#9ca3af","#d1d5db","#e5e7eb","#f3f4f6","#f9fafb","#ffffff","#ffffff"] },
+      "gray-surface":     { "role": "neutral",   "displayName": "Gray Surface",    "canonical": "#f3f4f6", "tonalRamp": ["#9ca3af","#d1d5db","#e5e7eb","#f3f4f6","#f9fafb","#ffffff","#ffffff","#ffffff"] },
+      "day-canvas":       { "role": "neutral",   "displayName": "Day Canvas",      "canonical": "#f9fafb", "tonalRamp": ["#d1d5db","#e5e7eb","#f3f4f6","#f9fafb","#ffffff","#ffffff","#ffffff","#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display",  "purpose": "Hero name only. One instance per page. Tight negative tracking (-0.05em) at 900 weight." },
+      "headline": { "displayName": "Headline","purpose": "Section headings and primary card titles. Title case, never all-caps." },
+      "body":     { "displayName": "Body",    "purpose": "Prose content in cards. 65ch max line length." },
+      "label":    { "displayName": "Label",   "purpose": "Year stamps, section eyebrows, chip text, API/git metadata. Always uppercase." },
+      "mono":     { "displayName": "Mono",    "purpose": "Exclusively inside dark code panels (terminal, git log, API). Quarantined from prose UI." }
+    },
+    "shadows": [
+      { "name": "card-resting",  "value": "0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03)",   "purpose": "Bento cards at rest in light mode. Near-invisible — depth comes from glass bg, not shadow." },
+      { "name": "card-hover",    "value": "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)",  "purpose": "Bento cards on hover, paired with translateY(-4px). Physical lift metaphor." },
+      { "name": "dark-insert",   "value": "0 2px 4px rgba(0,0,0,0.30), 0 8px 32px rgba(0,0,0,0.20)",  "purpose": "Terminal, git log, CTA dark cards. Never lifts on hover." },
+      { "name": "button-glow",   "value": "0 4px 16px rgba(13,148,136,0.35)",                           "purpose": "Primary button hover only. The single permitted teal-colored shadow." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "0.4s ease",   "purpose": "Card hover lift, border transitions." },
+      { "name": "ease-fast",     "value": "0.2s ease",   "purpose": "Button hover, social link color changes, chip interactions." },
+      { "name": "ease-reveal",   "value": "0.55s ease",  "purpose": "Scroll fade-in animations (.fade-in → .visible)." },
+      { "name": "stagger-unit",  "value": "0.06s",        "purpose": "Per-item stagger increment for bento grid reveal (1–7 steps)." }
+    ],
+    "breakpoints": [
+      { "name": "mobile",  "value": "480px",  "notes": "Timeline collapses to single column" },
+      { "name": "sm",      "value": "640px",  "notes": "Hero name gradient disabled, fact rows stack vertically" },
+      { "name": "md",      "value": "768px",  "notes": "Card radius reduces to 16px" },
+      { "name": "lg",      "value": "1024px", "notes": "Full 4-col bento grid" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA. Pill shape, Action Teal fill. Used for contact actions and primary navigation CTAs.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\"/></svg> Get in Touch</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: #0d9488; color: #ffffff; padding: 12px 24px; border-radius: 9999px; font-size: 0.875rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; font-family: Inter, -apple-system, sans-serif; } .ds-btn-primary:hover { background: #0f766e; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(13,148,136,0.35); } .ds-btn-primary:focus-visible { outline: 2px solid #0d9488; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent fill with gray border. Used only inside dark card contexts (CTA section).",
+      "html": "<button class=\"ds-btn-ghost\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z\"/><rect x=\"2\" y=\"9\" width=\"4\" height=\"12\"/><circle cx=\"4\" cy=\"4\" r=\"2\"/></svg> LinkedIn</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #d1d5db; border: 1px solid #374151; padding: 12px 24px; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; font-family: Inter, -apple-system, sans-serif; } .ds-btn-ghost:hover { background: rgba(13,148,136,0.1); color: #5eead4; border-color: rgba(13,148,136,0.3); transform: translateY(-1px); } .ds-btn-ghost:focus-visible { outline: 2px solid #0d9488; outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip (Default)",
+      "kind": "chip",
+      "refersTo": "chip-default",
+      "description": "Secondary skill / label tag. Muted, non-interactive by default. Used for supporting competencies.",
+      "html": "<span class=\"ds-chip-default\">Data Strategy</span>",
+      "css": ".ds-chip-default { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 9999px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.01em; background: rgba(243,244,246,0.5); color: #6b7280; border: 1px solid rgba(229,231,235,0.6); font-family: Inter, -apple-system, sans-serif; }"
+    },
+    {
+      "name": "Chip (Superpower)",
+      "kind": "chip",
+      "refersTo": "chip-blue",
+      "description": "Primary capability tag. Teal tint signals core competency. Use sparingly — only for the top 4–6 skills.",
+      "html": "<span class=\"ds-chip-super\">Product Strategy</span>",
+      "css": ".ds-chip-super { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 9999px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.01em; background: #f0fdfa; color: #0f766e; border: 1px solid #ccfbf1; font-family: Inter, -apple-system, sans-serif; }"
+    },
+    {
+      "name": "Bento Card (Light)",
+      "kind": "card",
+      "refersTo": "bento-card",
+      "description": "Primary layout unit. Glass white surface on cream canvas. Lifts on hover.",
+      "html": "<div class=\"ds-bento-card\"><p style=\"color:#111827;font-size:0.9375rem;line-height:1.7;font-family:Inter,-apple-system,sans-serif\">Card content goes here.</p></div>",
+      "css": ".ds-bento-card { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03); padding: 24px; transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease; will-change: transform; } .ds-bento-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05); transform: translateY(-4px); border-color: rgba(255,255,255,0.5); }"
+    },
+    {
+      "name": "Bento Card (Dark Panel)",
+      "kind": "card",
+      "refersTo": "bento-card-dark",
+      "description": "Terminal, git log, and CTA dark inserts. Always dark regardless of theme. Does not lift on hover.",
+      "html": "<div class=\"ds-bento-dark\"><p style=\"color:#d1d5db;font-size:0.875rem;font-family:Inter,-apple-system,sans-serif\">Dark card content.</p></div>",
+      "css": ".ds-bento-dark { background: #111827; border-radius: 20px; border: 1px solid #374151; box-shadow: 0 2px 4px rgba(0,0,0,0.30), 0 8px 32px rgba(0,0,0,0.20); padding: 24px; }"
+    },
+    {
+      "name": "Terminal Card",
+      "kind": "custom",
+      "description": "Signature dark code panel. Renders a typewriter command with animated output. Signal Cyan for the caret; Action Teal for the prompt dollar.",
+      "html": "<div class=\"ds-terminal\"><div class=\"ds-terminal-bar\"><div class=\"ds-terminal-dots\"><span style=\"background:#ff5f56\"></span><span style=\"background:#ffbd2e\"></span><span style=\"background:#27c93f\"></span></div><span class=\"ds-terminal-name\">hadar@sapir ~ %</span></div><div class=\"ds-terminal-body\"><div style=\"display:flex;align-items:center;gap:7px\"><span class=\"ds-terminal-dollar\">$</span><span style=\"color:#e6edf3\">get_next_role --mode=founding</span><span class=\"ds-terminal-caret\"></span></div></div></div>",
+      "css": ".ds-terminal { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; font-family: 'SF Mono','Fira Code','Cascadia Code','Courier New',monospace; max-width: 480px; } .ds-terminal-bar { display: flex; align-items: center; padding: 10px 14px; background: #161b22; border-bottom: 1px solid #21262d; gap: 8px; } .ds-terminal-dots { display: flex; gap: 6px; } .ds-terminal-dots span { display: block; width: 10px; height: 10px; border-radius: 50%; } .ds-terminal-name { font-size: 0.67rem; color: #6b7280; margin: 0 auto; letter-spacing: 0.02em; } .ds-terminal-body { padding: 14px 17px 16px; font-size: 0.775rem; line-height: 1.6; } .ds-terminal-dollar { color: #0d9488; font-weight: 700; flex-shrink: 0; user-select: none; } .ds-terminal-caret { display: inline-block; width: 7px; height: 0.9em; background: #22d3ee; vertical-align: text-bottom; animation: ds-blink 1s step-end infinite; margin-left: 2px; } @keyframes ds-blink { 0%,100%{opacity:1} 50%{opacity:0} }"
+    },
+    {
+      "name": "Social Link",
+      "kind": "custom",
+      "description": "Small square-rounded icon button for external profile links. Gray at rest, ink on hover.",
+      "html": "<a href=\"#\" class=\"ds-social-link\" aria-label=\"GitHub\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22\"/></svg></a>",
+      "css": ".ds-social-link { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; background: #f3f4f6; border: 1px solid #d1d5db; color: #4b5563; text-decoration: none; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease; } .ds-social-link:hover { background: #111827; color: #f9fafb; border-color: #111827; } .ds-social-link:focus-visible { outline: 2px solid #0d9488; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Maker's Portfolio",
+    "overview": "This is a portfolio built by someone who builds things. The design doesn't perform ambition — it demonstrates it. Every structural choice is a proof point: a real git log instead of a timeline graphic, a real D3 map instead of a flag-emoji list, a real terminal card instead of a pull quote. The system is clean and purposeful because the work itself provides the personality, and decoration would only dilute the signal.\n\nThe palette is restrained in light mode — cream canvas, white glass cards, one teal accent — with deliberate contrast pockets: dark code panels that live inside light-mode cards and make the technical depth visible without overwhelming.\n\nThis system explicitly rejects: SaaS-cream + purple gradient aesthetics, 'passionate problem-solver' copy energy expressed through rounded pastel UI, bento grids where every card is the same size, gradient text on hero names, and the hero-metric template.",
+    "keyCharacteristics": [
+      "Restrained light base with deliberate dark inserts",
+      "One accent color (#0d9488) used sparingly; cyan (#22d3ee) reserved for data/code contexts only",
+      "Glassmorphic cards in light mode; tonal dark glass in dark mode",
+      "Monospace as a semantic signal — only inside genuine code/data components",
+      "Hover states that lift, not glow"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule",        "body": "Action Teal (#0d9488) is the only color that can appear on interactive elements in prose UI. Signal Cyan (#22d3ee) is data-only and must not appear in navigation, chips, or callouts.",  "section": "colors" },
+      { "name": "The Dark Insert Rule",        "body": "Dark panels (terminal, git log, API response) are not dark-mode UI. They are deliberate contrast inserts that exist in both light and dark mode unchanged.",                                      "section": "colors" },
+      { "name": "The Gradient Text Ban",       "body": "The hero name uses a subtle gray-to-gray gradient clip. This is the single permitted use. No rainbow or teal-to-cyan gradient text anywhere.",                                                     "section": "typography" },
+      { "name": "The Mono Quarantine Rule",    "body": "Monospace type is prohibited in navigation, cards, chips, or any prose context. Its presence inside dark panels is precisely what makes those panels readable as technical artifacts.",             "section": "typography" },
+      { "name": "The Flat-at-Rest Rule",       "body": "Shadows exist only as state responses. At rest, a card's depth comes from its white glass background against the cream canvas — not from a shadow.",                                                "section": "elevation" }
+    ],
+    "dos": [
+      "Use Action Teal (#0d9488) as the single interactive accent — buttons, focus rings, active dots.",
+      "Use dark code panels as proof-of-technical-depth inserts — they should feel like real artifacts embedded in the page.",
+      "Lift cards on hover with translateY(-4px) at 0.4s ease.",
+      "Use uppercase labels (0.68rem, 700 weight, 0.10em tracking) for section eyebrows, year stamps, and metadata.",
+      "Preserve prefers-reduced-motion overrides.",
+      "Keep body line length at 65ch max in prose cards."
+    ],
+    "donts": [
+      "Don't use gradient text on headings, chips, or any element outside the hero name's subtle gray-to-gray treatment.",
+      "Don't make every bento card the same size with the same content structure (icon + heading + paragraph).",
+      "Don't use Signal Cyan (#22d3ee) as a brand accent in prose UI — it is data-only.",
+      "Don't add dramatic resting shadows to light bento cards.",
+      "Don't use the hero-metric template for fabricated or generic stats.",
+      "Don't write copy with adjective-stacks: 'passionate,' 'driven,' 'results-oriented.'",
+      "Don't add monospace type outside dark code panel contexts.",
+      "Don't introduce new accent colors (purple, orange, pink) without explicit discussion."
+    ]
+  }
+}

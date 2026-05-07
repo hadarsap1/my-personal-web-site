@@ -39,7 +39,7 @@ const insightGroups = [
   { id: 'azores-lisbon', name: 'Azores & Lisbon', title: 'Adaptability', insight: 'Navigating shifting environments with agility and curiosity.' },
   { id: 'usa', name: 'New York & Phoenix', title: 'Market Scale', insight: 'Understanding the velocity and requirements of the US market.' },
   { id: 'sri-lanka-maldives', name: 'Sri Lanka & Maldives', title: 'The Power of Focus', insight: 'Finding clarity and strategic depth in complex environments.' },
-  { id: 'poland-slovakia', name: 'South Poland & Slovakia', title: 'Endurance', insight: 'Pushing boundaries in tough terrains-the same mindset needed for long product cycles.' },
+  { id: 'poland-slovakia', name: 'South Poland & Slovakia', title: 'Endurance', insight: 'Pushing boundaries in tough terrains - the same mindset needed for long product cycles.' },
   { id: 'spain-france', name: 'N. Spain, Paris & Provence', title: 'Aesthetic Precision', insight: 'Perfection in the details, from gastronomy to UI/UX.' },
   { id: 'greece', name: 'Greece, Rhodes & Peloponnese', title: 'Heritage & Scale', insight: 'Building on solid foundations while scaling for the future.' },
   { id: 'germany-warsaw', name: 'Germany & Warsaw', title: 'Systemic Efficiency', insight: 'Mastering optimization, structure, and operational excellence.' },
@@ -533,12 +533,19 @@ function initGitLog() {
   const commits = document.querySelectorAll('.gitlog-commit');
   if (!commits.length) return;
 
-  // Click to expand/collapse detail
+  // Click and keyboard to expand/collapse detail
   commits.forEach((commit) => {
-    commit.addEventListener('click', () => {
+    const toggle = () => {
       const idx = commit.dataset.gitlog;
       const detail = document.getElementById('gitlog-detail-' + idx);
-      if (detail) detail.classList.toggle('open');
+      if (detail) {
+        const isOpen = detail.classList.toggle('open');
+        commit.setAttribute('aria-expanded', String(isOpen));
+      }
+    };
+    commit.addEventListener('click', toggle);
+    commit.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
     });
   });
 
@@ -617,6 +624,48 @@ initApiCard();
 // ===================================================================
 // CHIP TILT (physical hover - desktop only)
 // ===================================================================
+function initPillarTabs() {
+  const tabs = document.querySelectorAll('.pillar-tab');
+  const panels = document.querySelectorAll('.pillar-panel');
+  if (!tabs.length) return;
+
+  const activeClasses = [
+    ['bg-blue-500', 'text-white', 'border-blue-500'],
+    ['bg-[#0d9488]', 'text-white', 'border-[#0d9488]'],
+    ['bg-green-600', 'text-white', 'border-green-600'],
+  ];
+  const inactiveClasses = ['bg-white', 'text-[#6b7280]', 'border-[#e5e7eb]'];
+
+  function activate(index) {
+    tabs.forEach((tab, i) => {
+      tab.classList.remove(...activeClasses[i]);
+      tab.classList.remove(...inactiveClasses);
+      tab.setAttribute('aria-selected', 'false');
+      if (i === index) {
+        tab.classList.add(...activeClasses[i]);
+        tab.setAttribute('aria-selected', 'true');
+      } else {
+        tab.classList.add(...inactiveClasses);
+      }
+    });
+    panels.forEach((panel, i) => {
+      panel.classList.toggle('hidden', i !== index);
+    });
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => activate(i));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') activate((i + 1) % tabs.length);
+      if (e.key === 'ArrowLeft') activate((i - 1 + tabs.length) % tabs.length);
+    });
+  });
+
+  activate(0);
+}
+
+initPillarTabs();
+
 const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 if (!prefersReducedMotion && supportsHover) {
   document.querySelectorAll('.chip-interactive').forEach((chip) => {
