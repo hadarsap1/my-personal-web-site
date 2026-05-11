@@ -196,11 +196,17 @@ function showTooltip(event, cityName, group) {
   const x = event.clientX - rect.left + 15;
   const y = event.clientY - rect.top - 10;
 
-  tooltip.innerHTML = `
-    <div class="tooltip-location">${cityName}</div>
-    <div class="tooltip-insight-title">${group.title}</div>
-    <div class="tooltip-insight-text">${group.insight}</div>
-  `;
+  tooltip.textContent = '';
+  const _loc = document.createElement('div');
+  _loc.className = 'tooltip-location';
+  _loc.textContent = cityName;
+  const _title = document.createElement('div');
+  _title.className = 'tooltip-insight-title';
+  _title.textContent = group.title;
+  const _text = document.createElement('div');
+  _text.className = 'tooltip-insight-text';
+  _text.textContent = group.insight;
+  tooltip.append(_loc, _title, _text);
   tooltip.style.display = 'block';
   tooltip.style.left = x + 'px';
   tooltip.style.top = y + 'px';
@@ -279,14 +285,21 @@ function buildSidebar() {
     const item = document.createElement('div');
     item.className = 'location-item';
     item.dataset.id = group.id;
-    item.innerHTML = `
-      <span class="location-dot"></span>
-      <div>
-        <div class="location-name">${group.name}</div>
-        <div class="location-insight-label">${group.title}</div>
-        <div class="location-cities">${cityNames}</div>
-      </div>
-    `;
+    item.setAttribute('aria-label', group.name + ': ' + group.title);
+    const _dot = document.createElement('span');
+    _dot.className = 'location-dot';
+    const _inner = document.createElement('div');
+    const _name = document.createElement('div');
+    _name.className = 'location-name';
+    _name.textContent = group.name;
+    const _label = document.createElement('div');
+    _label.className = 'location-insight-label';
+    _label.textContent = group.title;
+    const _cities = document.createElement('div');
+    _cities.className = 'location-cities';
+    _cities.textContent = cityNames;
+    _inner.append(_name, _label, _cities);
+    item.append(_dot, _inner);
     item.setAttribute('tabindex', '0');
     item.setAttribute('role', 'button');
     item.addEventListener('click', () => selectGroup(group.id));
@@ -359,6 +372,7 @@ if (mobileToggle && mobileMenu) {
   mobileToggle.addEventListener('click', () => {
     const isOpen = mobileMenu.classList.toggle('hidden') === false;
     mobileToggle.setAttribute('aria-expanded', String(isOpen));
+    mobileToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
   });
 }
 
@@ -415,6 +429,7 @@ window.addEventListener('resize', () => {
 // ── Resume request ────────────────────────────────────
 function requestResume() {
   const emailInput = document.getElementById('resume-contact');
+  const btn = document.getElementById('resume-btn');
   const email = emailInput.value.trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
   const subject = encodeURIComponent('Finally, a Product leader who makes it easy');
@@ -424,19 +439,39 @@ function requestResume() {
     'Please send your resume to: ' + email + '\n\n' +
     'Looking forward to connecting!'
   );
-  window.location.href = 'mailto:Hadarsap@gmail.com?subject=' + subject + '&reply-to=' + encodeURIComponent(email) + '&body=' + body;
+  window.open('mailto:hadarsap@gmail.com?subject=' + subject + '&reply-to=' + encodeURIComponent(email) + '&body=' + body);
+  if (btn) btn.disabled = true;
   document.getElementById('resume-sent').classList.remove('hidden');
-  document.getElementById('resume-contact').value = '';
+  emailInput.value = '';
 }
+
+const resumeBtn = document.getElementById('resume-btn');
+if (resumeBtn) resumeBtn.addEventListener('click', requestResume);
 
 // ── Copy email ────────────────────────────────────────
 function copyEmail(btn) {
-  navigator.clipboard.writeText('Hadarsap@gmail.com').then(() => {
+  const COPIED_ICON = 'Copied! <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
+  const showCopied = () => {
     const orig = btn.innerHTML;
-    btn.innerHTML = 'Copied! <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
+    btn.innerHTML = COPIED_ICON;
     setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  };
+  navigator.clipboard.writeText('hadarsap@gmail.com').then(showCopied).catch(() => {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = 'hadarsap@gmail.com';
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopied();
+    } catch (e) {}
   });
 }
+
+const copyEmailBtn = document.getElementById('copy-email-btn');
+if (copyEmailBtn) copyEmailBtn.addEventListener('click', () => copyEmail(copyEmailBtn));
 
 // ===================================================================
 // TERMINAL ANIMATION
