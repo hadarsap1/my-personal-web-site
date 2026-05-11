@@ -555,6 +555,25 @@ section[id] {
   border-radius: 4px;
 }
 
+.passport-card {
+  position: relative;
+}
+
+.passport-card::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  display: block;
+  height: 2.5rem;
+  background: linear-gradient(to top, #ffffff, transparent);
+  pointer-events: none;
+  margin-top: -2.5rem;
+}
+
+html.dark .passport-card::after {
+  background: linear-gradient(to top, #1f2937, transparent);
+}
+
 .location-item {
   display: flex;
   align-items: center;
@@ -1189,9 +1208,9 @@ section[id] {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.07);
-  border: 1px solid rgba(37, 99, 235, 0.14);
+  color: #0d9488;
+  background: rgba(13, 148, 136, 0.07);
+  border: 1px solid rgba(13, 148, 136, 0.18);
   border-radius: 99px;
   padding: 0.25rem 0.7rem;
   margin-bottom: 1.1rem;
@@ -1259,9 +1278,9 @@ section[id] {
 
 /* Dark mode */
 html.dark .testimonial-tag {
-  color: #60a5fa;
-  background: rgba(96, 165, 250, 0.1);
-  border-color: rgba(96, 165, 250, 0.2);
+  color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.2);
 }
 
 html.dark .testimonial-mark { color: rgba(255, 255, 255, 0.07); }
