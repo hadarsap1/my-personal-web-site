@@ -570,6 +570,10 @@ section[id] {
   margin-top: -2.5rem;
 }
 
+html.dark .passport-card::after {
+  background: linear-gradient(to top, #1f2937, transparent);
+}
+
 .location-item {
   display: flex;
   align-items: center;
