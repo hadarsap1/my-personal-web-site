@@ -810,28 +810,58 @@
     var hashCounts = {};
     filteredVisits.forEach(function (v) { if (v.ip_hash) hashCounts[v.ip_hash] = (hashCounts[v.ip_hash] || 0) + 1; });
 
-    var recent = filteredVisits.slice(0, 100);
+    var recent = filteredVisits.slice(0, 200);
+
+    // Merge visually-identical rows: same minute + same fingerprint fields.
+    // Keeps the row with the longest duration as the representative; adds a count.
+    var mergeMap = {};
+    var mergeOrder = [];
     recent.forEach(function (v) {
-      var location = [v.city, v.region, v.country].filter(Boolean).join(', ');
+      var location = [v.city, v.region, v.country].filter(Boolean).join(', ') || 'Unknown';
       var ref = '';
       if (v.referrer) {
         try { ref = new URL(v.referrer).hostname.replace('www.', ''); } catch (_) { ref = v.referrer; }
       }
+      ref = ref || 'Direct';
+      var minute = v.visited_at ? v.visited_at.slice(0, 16) : ''; // "YYYY-MM-DDTHH:MM"
       var isReturning = v.ip_hash && hashCounts[v.ip_hash] > 1;
+      var key = [minute, location, v.org || '', v.device_type || '', v.browser || '', v.os || '',
+                 v.screen_resolution || '', v.language || '', ref, isReturning ? 'R' : 'N'].join('|');
+
+      if (!mergeMap[key]) {
+        mergeMap[key] = { v: v, location: location, ref: ref, isReturning: isReturning, count: 0, maxDuration: v.time_spent_s || 0 };
+        mergeOrder.push(key);
+      }
+      mergeMap[key].count++;
+      if ((v.time_spent_s || 0) > mergeMap[key].maxDuration) {
+        mergeMap[key].maxDuration = v.time_spent_s;
+        mergeMap[key].v = v; // keep best representative
+      }
+    });
+
+    mergeOrder.forEach(function (key) {
+      var m = mergeMap[key];
+      var v = m.v;
+      var countBadge = m.count > 1
+        ? ' <span style="display:inline-block;padding:0.1rem 0.35rem;border-radius:4px;font-size:0.65rem;font-weight:600;background:rgba(255,255,255,0.07);color:var(--color-text-faint);">×' + m.count + '</span>'
+        : '';
+      var typeTag = m.isReturning
+        ? '<span class="vl-tag returning">Returning</span>'
+        : '<span class="vl-tag">New</span>';
 
       var tr = document.createElement('tr');
       tr.innerHTML =
-        '<td class="vl-time">' + escHtml(formatTime(v.visited_at)) + '</td>' +
-        '<td class="vl-location">' + escHtml(location || 'Unknown') + '</td>' +
+        '<td class="vl-time">' + escHtml(formatTime(v.visited_at)) + countBadge + '</td>' +
+        '<td class="vl-location">' + escHtml(m.location) + '</td>' +
         '<td class="vl-org">' + escHtml(v.org || '—') + '</td>' +
         '<td>' + escHtml(v.device_type || '—') + '</td>' +
         '<td>' + escHtml(v.browser || '—') + '</td>' +
         '<td>' + escHtml(v.os || '—') + '</td>' +
         '<td>' + escHtml(v.screen_resolution || '—') + '</td>' +
         '<td>' + escHtml(v.language || '—') + '</td>' +
-        '<td class="vl-ref" title="' + escHtml(v.referrer || '') + '">' + escHtml(ref || 'Direct') + '</td>' +
-        '<td>' + formatDuration(v.time_spent_s) + '</td>' +
-        '<td>' + (isReturning ? '<span class="vl-tag returning">Returning</span>' : '<span class="vl-tag">New</span>') + '</td>';
+        '<td class="vl-ref" title="' + escHtml(v.referrer || '') + '">' + escHtml(m.ref) + '</td>' +
+        '<td>' + formatDuration(m.maxDuration) + '</td>' +
+        '<td>' + typeTag + '</td>';
       tbody.appendChild(tr);
     });
   }
