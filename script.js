@@ -693,6 +693,8 @@ function initPillarTabs() {
     tab.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') activate((i + 1) % tabs.length);
       if (e.key === 'ArrowLeft') activate((i - 1 + tabs.length) % tabs.length);
+      if (e.key === 'Home') { e.preventDefault(); activate(0); }
+      if (e.key === 'End') { e.preventDefault(); activate(tabs.length - 1); }
     });
   });
 

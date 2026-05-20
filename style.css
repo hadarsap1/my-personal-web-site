@@ -129,6 +129,13 @@ section[id] {
   background-clip: text;
 }
 
+@media (forced-colors: active) {
+  .hero-name {
+    -webkit-text-fill-color: ButtonText;
+    background: none;
+  }
+}
+
 /* Fact rows in hero - number + label side by side */
 .fact-row {
   display: flex;
