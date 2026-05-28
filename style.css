@@ -1808,59 +1808,8 @@ html.dark #resume-contact {
 }
 
 
-/* ==========================================================================
-   CUSTOM TERMINAL CURSOR (desktop pointer devices only)
-   A thin blinking vertical bar that replaces the OS cursor on the page.
-   ========================================================================== */
-
-@media (hover: hover) and (pointer: fine) {
-  body { cursor: none; }
-
-  /* Preserve default cursor inside interactive elements */
-  a, button, input, textarea, select, label, [role="button"] {
-    cursor: none;
-  }
-}
-
-.site-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-  width: 3px;
-  height: 18px;
-  background: #0d9488;
-  border-radius: 1px;
-  transform: translate(-50%, -50%);
-  transition: transform 0.06s ease, opacity 0.15s ease, width 0.15s ease, height 0.15s ease, background 0.15s ease;
-  animation: cursorBlink 1.1s step-end infinite;
-  display: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .site-cursor { display: block; }
-}
-
-/* Enlarge when hovering interactive elements */
-.site-cursor.cursor-hover {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #2dd4bf;
-  animation: none;
-  opacity: 0.85;
-}
-
-/* Inside dark sections, cursor turns lighter */
-.site-cursor.cursor-dark {
-  background: #5eead4;
-}
-
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
+/* Custom cursor removed — OS cursor is preserved throughout. */
+.site-cursor { display: none !important; }
 
 
 /* ==========================================================================
