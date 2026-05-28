@@ -715,3 +715,65 @@ if (!prefersReducedMotion && supportsHover) {
     chip.addEventListener('mouseleave', () => { chip.style.transform = ''; });
   });
 }
+
+
+// ===================================================================
+// CUSTOM TERMINAL CURSOR
+// Replaces the OS cursor on desktop with a blinking terminal bar.
+// Only activates on hover-capable pointer devices.
+// ===================================================================
+(function initCursor() {
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!supportsHover) return;
+
+  const cursor = document.getElementById('site-cursor');
+  if (!cursor) return;
+
+  let mouseX = -100, mouseY = -100;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top  = mouseY + 'px';
+  });
+
+  document.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    cursor.style.opacity = '1';
+  });
+
+  // Enlarge cursor on interactive elements
+  const interactiveSelector = 'a, button, input, textarea, select, [role="button"], .bento-card, .gitlog-commit';
+  document.querySelectorAll(interactiveSelector).forEach((el) => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
+  });
+
+  // Dark cursor variant inside dark sections
+  const darkSections = document.querySelectorAll('.bento-card-dark, .gitlog-card, .terminal-card, .api-card, .map-outer-card');
+  darkSections.forEach((el) => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-dark'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-dark'));
+  });
+})();
+
+
+// ===================================================================
+// SECTION HEADER REVEAL ANIMATIONS
+// Section headings + description paragraphs animate in on scroll.
+// ===================================================================
+(function initSectionReveals() {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '-40px 0px 0px 0px' });
+
+  document.querySelectorAll('.section-reveal').forEach((el) => revealObserver.observe(el));
+})();
