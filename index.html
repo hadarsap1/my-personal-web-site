@@ -926,10 +926,15 @@
 
   </main>
 
-  <footer class="py-8 text-[#9ca3af] text-xs border-t border-[#e5e7eb]/60">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p>&copy; <span id="footer-year">2026</span> Hadar Sapir &middot; <span class="font-mono text-[10px]">git push origin main</span> &middot; deployed on GitHub Pages</p>
-      <nav class="flex items-center gap-4 flex-wrap justify-center sm:justify-end" aria-label="Footer navigation">
+  <footer class="py-6 sm:py-8 text-[#9ca3af] text-xs border-t border-[#e5e7eb]/60">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between sm:gap-3">
+      <!-- Copyright: show full git line only on sm+ -->
+      <p class="text-center sm:text-left">
+        &copy; <span id="footer-year">2026</span> Hadar Sapir
+        <span class="hidden sm:inline">&middot; <span class="font-mono text-[10px]">git push origin main</span> &middot; deployed on GitHub Pages</span>
+      </p>
+      <!-- Nav: two tight rows on mobile, single row on desktop -->
+      <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2 sm:flex-nowrap sm:gap-4 sm:justify-end" aria-label="Footer navigation">
         <a href="#home" class="hover:text-[#6b7280] transition-colors">Home</a>
         <a href="#projects" class="hover:text-[#6b7280] transition-colors">Projects</a>
         <a href="#travel" class="hover:text-[#6b7280] transition-colors">Travel</a>
