@@ -573,23 +573,25 @@
       });
     }
 
-    // Deduplicate: collapse visits from the same ip_hash within 2 minutes of
-    // each other (race-condition duplicates from multiple tabs).
+    // Deduplicate: collapse visits from the same visitor within 2 minutes.
+    // For visits with ip_hash: key = ip_hash + time bucket.
+    // For visits without ip_hash: key = device fingerprint + time bucket.
     // Keep the entry with the highest time_spent_s.
     var DEDUP_MS = 2 * 60 * 1000;
-    var seen = {}; // key: ip_hash + bucket → winner row
+    var seen = {};
     base.forEach(function (v) {
-      if (!v.ip_hash || !v.visited_at) return;
+      if (!v.visited_at) return;
       var ts = new Date(v.visited_at).getTime();
       var bucket = Math.floor(ts / DEDUP_MS);
-      var key = v.ip_hash + '|' + bucket;
+      var identity = v.ip_hash
+        ? v.ip_hash
+        : [v.device_type, v.browser, v.os, v.screen_resolution, v.language, v.page_url].join('|');
+      var key = identity + '||' + bucket;
       if (!seen[key] || (v.time_spent_s || 0) > (seen[key].time_spent_s || 0)) {
         seen[key] = v;
       }
     });
-    // Visits without ip_hash (bots/unknown) are kept as-is
-    var noHash = base.filter(function (v) { return !v.ip_hash || !v.visited_at; });
-    filteredVisits = Object.values(seen).concat(noHash)
+    filteredVisits = Object.values(seen)
       .sort(function (a, b) { return (b.visited_at || '').localeCompare(a.visited_at || ''); });
 
     var info = document.getElementById('filter-info');
