@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clearday — Case Study | Hadar Sapir</title>
+  <meta name="description" content="How I built a wartime school scheduling platform in Israel from scratch — helping parents coordinate when routines collapsed overnight.">
+  <link rel="canonical" href="https://hadarsap.online/projects/clearday">
+  <meta property="og:title" content="Clearday — Wartime School Coordination | Hadar Sapir">
+  <meta property="og:description" content="How I built a wartime school scheduling platform in Israel from scratch. Full case study.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hadarsap.online/projects/clearday">
+  <meta property="og:image" content="https://hadarsap.online/og-card.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700..900;1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23111827' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' fill='%230d9488' font-size='42' font-weight='700' font-family='Inter,sans-serif'>HS</text></svg>">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if ((saved || (prefersDark ? 'dark' : 'light')) === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans:  ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            mono:  ['"JetBrains Mono"', '"SF Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .prose-body p { margin-bottom: 1.25rem; font-size: 1rem; line-height: 1.8; color: #374151; }
+    .prose-body h3 { font-size: 1.1rem; font-weight: 700; color: #111827; margin: 2.25rem 0 0.75rem; }
+    html.dark .prose-body p { color: #d1d5db; }
+    html.dark .prose-body h3 { color: #f9fafb; }
+  </style>
+</head>
+<body class="bg-[#f8f9fa] font-sans text-[#374151] antialiased">
+
+  <!-- Floating Nav -->
+  <nav aria-label="Main navigation" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]">
+    <div class="flex items-center gap-1 bg-white/60 backdrop-blur-3xl border border-white/30 rounded-full px-2 py-1.5 shadow-lg shadow-black/[0.06]">
+      <a href="/" class="font-black text-[#111827] px-3 py-1.5 text-sm tracking-tighter">HS.</a>
+      <div class="hidden md:flex items-center">
+        <a href="/#home" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Home</a>
+        <a href="/#experience" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Experience</a>
+        <a href="/#projects" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Projects</a>
+        <a href="/now" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Now</a>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-icon-sun w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="theme-icon-moon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="/#contact" class="bg-[#111827] text-[#f9fafb] text-xs font-semibold px-4 py-1.5 rounded-full hover:bg-[#1f2937] transition-colors duration-200 ml-1 whitespace-nowrap">Get in Touch</a>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 pt-28 pb-20">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs text-[#9ca3af]">
+        <li><a href="/" class="hover:text-[#6b7280] transition-colors">hadarsap.online</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/#projects" class="hover:text-[#6b7280] transition-colors">projects</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="text-[#374151]" aria-current="page">clearday</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-[10px] font-bold tracking-[0.12em] uppercase text-[#0d9488] bg-[#f0fdfa] border border-[#ccfbf1] px-2.5 py-1 rounded-full">Case Study</span>
+        <span class="text-[10px] font-bold tracking-[0.12em] uppercase text-[#6b7280] px-2.5 py-1 rounded-full border border-[#e5e7eb]">2024</span>
+      </div>
+      <h1 class="section-heading text-[clamp(2.4rem,7vw,4rem)] font-black text-[#111827] leading-[0.95] mb-4">Clearday</h1>
+      <p class="text-lg font-serif italic text-[#0d9488] leading-snug mb-5">Wartime disruptions shattered school routines. Parents needed coordination infrastructure that didn't exist yet.</p>
+      <div class="flex flex-wrap gap-3 text-xs text-[#6b7280]">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0z"/></svg>
+          Built in: 2 weeks
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Role: Solo founder / engineer
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+          Context: Israel, wartime
+        </span>
+      </div>
+    </header>
+
+    <!-- Tech stack chips -->
+    <div class="bento-card p-5 mb-10 flex flex-wrap gap-2">
+      <span class="text-[11px] font-semibold text-[#6b7280] mr-1 self-center">Stack:</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Next.js 15</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">PostgreSQL</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">NextAuth</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Google SSO</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Resend</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Vercel</span>
+    </div>
+
+    <!-- Body -->
+    <article class="prose-body">
+
+      <h3>The situation</h3>
+      <p>
+        In October 2023, after the Hamas attack on Israel, the schools in the "Otef" region — the communities surrounding Gaza — shut down with no clear timeline for return. Families were evacuated, displaced, or sheltering in place. The schools that did eventually reopen ran on irregular, constantly-changing schedules that no one could keep track of.
+      </p>
+      <p>
+        Parents were managing coordination through WhatsApp groups. Hundreds of messages a day. Which kids were going to school, which weren't, who could host playdates, what time was pickup — all of it buried in noise. For parents already under enormous emotional stress, this was an additional exhausting overhead.
+      </p>
+
+      <h3>What I built</h3>
+      <p>
+        Clearday is a scheduling coordination platform built specifically for these communities. The core idea: give parents a dedicated, structured place to coordinate around school schedules, instead of fighting through message threads.
+      </p>
+      <p>
+        The platform has four main features: a daily schedule view that shows school status and any changes; a playdate coordination tool where parents can post and discover availability; a multi-school admin panel with RBAC so each school can manage their own data; and a daily email digest through Resend that summarizes the next day's plan.
+      </p>
+      <p>
+        Google SSO was a deliberate choice — these parents were not going to create another account during a crisis. One click with their existing Google account was the right call.
+      </p>
+
+      <h3>The build</h3>
+      <p>
+        I built the first working version in about two weeks. The stack choice was Next.js 15 with PostgreSQL because I needed server-side rendering for the schedule views to load fast, and I wanted a real relational database to handle the multi-school admin hierarchy properly.
+      </p>
+      <p>
+        The hardest technical decision was the RBAC model. Each school needed its own admin who could manage their school's data independently, but I also needed a super-admin layer for platform management. I built a simple role table — parent, school_admin, platform_admin — with middleware that checks permissions on every protected route. Simple enough to ship fast, structured enough to not be a mess later.
+      </p>
+      <p>
+        The daily email digest was actually the feature that drove the most engagement. Parents told me they liked having "one summary" they could read in the morning before the day started, rather than checking the app repeatedly. That was a learning I didn't anticipate.
+      </p>
+
+      <h3>What I'd do differently</h3>
+      <p>
+        I'd add push notifications earlier. Email was the right first step because it didn't require app install, but real-time alerts for sudden schedule changes matter a lot when schools in a conflict zone close on short notice.
+      </p>
+      <p>
+        I'd also think harder about the onboarding flow. I handled verification of who belonged to which school manually for the first cohort. That doesn't scale, and it was a significant time cost during a period when I was also trying to support the community in other ways.
+      </p>
+
+      <h3>Why I built it</h3>
+      <p>
+        I've been running with veterans through Running with Rami for eleven years. When the war started, some of the people I run with every Friday were directly affected. I couldn't do nothing. Building something useful was the way I know how to show up.
+      </p>
+      <p>
+        Clearday isn't a startup. It's a product that exists because a community needed it and I had the skills to build it. That's reason enough.
+      </p>
+
+    </article>
+
+    <!-- CTA row -->
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a href="https://otef-parents.vercel.app" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0d9488] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#0f766e] transition-colors duration-200">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+        Open live app
+      </a>
+      <a href="/#projects" class="inline-flex items-center gap-2 text-[#6b7280] text-sm font-medium px-4 py-2.5 rounded-full border border-[#e5e7eb] hover:border-[#d1d5db] hover:text-[#374151] transition-colors duration-200">
+        ← All projects
+      </a>
+    </div>
+
+    <!-- Divider + next case study -->
+    <div class="mt-14 pt-8 border-t border-[#e5e7eb]">
+      <p class="text-xs font-semibold tracking-[0.1em] uppercase text-[#9ca3af] mb-4">Next case study</p>
+      <a href="/projects/property-landing-builder" class="bento-card bento-card-project-primary p-5 flex items-center justify-between group">
+        <div>
+          <p class="text-sm font-bold text-[#111827] group-hover:text-[#0d9488] transition-colors">Property Landing Builder</p>
+          <p class="text-xs text-[#6b7280] mt-0.5">Generate a property landing page with Claude AI in 5 minutes</p>
+        </div>
+        <svg class="w-4 h-4 text-[#9ca3af] group-hover:text-[#0d9488] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="py-6 text-[#9ca3af] text-xs border-t border-[#e5e7eb]/60">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+      <p>© 2026 Hadar Sapir</p>
+      <a href="/" class="hover:text-[#6b7280] transition-colors">hadarsap.online →</a>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    }
+  </script>
+</body>
+</html>

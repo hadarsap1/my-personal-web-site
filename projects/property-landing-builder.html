@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Landing Builder — Case Study | Hadar Sapir</title>
+  <meta name="description" content="How I built a Claude AI-powered tool that generates beautiful standalone landing pages for property listings in under 5 minutes. No design skills, no account needed.">
+  <link rel="canonical" href="https://hadarsap.online/projects/property-landing-builder">
+  <meta property="og:title" content="Property Landing Builder — Case Study | Hadar Sapir">
+  <meta property="og:description" content="How I built a Claude AI-powered tool that generates property landing pages in under 5 minutes. Full case study.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hadarsap.online/projects/property-landing-builder">
+  <meta property="og:image" content="https://hadarsap.online/og-card.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700..900;1,9..144,300..500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23111827' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' fill='%230d9488' font-size='42' font-weight='700' font-family='Inter,sans-serif'>HS</text></svg>">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if ((saved || (prefersDark ? 'dark' : 'light')) === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans:  ['"DM Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            mono:  ['"JetBrains Mono"', '"SF Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .prose-body p { margin-bottom: 1.25rem; font-size: 1rem; line-height: 1.8; color: #374151; }
+    .prose-body h3 { font-size: 1.1rem; font-weight: 700; color: #111827; margin: 2.25rem 0 0.75rem; }
+    html.dark .prose-body p { color: #d1d5db; }
+    html.dark .prose-body h3 { color: #f9fafb; }
+  </style>
+</head>
+<body class="bg-[#f8f9fa] font-sans text-[#374151] antialiased">
+
+  <!-- Floating Nav -->
+  <nav aria-label="Main navigation" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]">
+    <div class="flex items-center gap-1 bg-white/60 backdrop-blur-3xl border border-white/30 rounded-full px-2 py-1.5 shadow-lg shadow-black/[0.06]">
+      <a href="/" class="font-black text-[#111827] px-3 py-1.5 text-sm tracking-tighter">HS.</a>
+      <div class="hidden md:flex items-center">
+        <a href="/#home" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Home</a>
+        <a href="/#experience" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Experience</a>
+        <a href="/#projects" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Projects</a>
+        <a href="/now" class="nav-link text-xs font-medium text-[#6b7280] hover:text-[#111827] px-3 py-1.5 rounded-full hover:bg-[#e5e7eb]/60 transition-all duration-200">Now</a>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-icon-sun w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="theme-icon-moon w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="/#contact" class="bg-[#111827] text-[#f9fafb] text-xs font-semibold px-4 py-1.5 rounded-full hover:bg-[#1f2937] transition-colors duration-200 ml-1 whitespace-nowrap">Get in Touch</a>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 pt-28 pb-20">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs text-[#9ca3af]">
+        <li><a href="/" class="hover:text-[#6b7280] transition-colors">hadarsap.online</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/#projects" class="hover:text-[#6b7280] transition-colors">projects</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="text-[#374151]" aria-current="page">property-landing-builder</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-[10px] font-bold tracking-[0.12em] uppercase text-[#0d9488] bg-[#f0fdfa] border border-[#ccfbf1] px-2.5 py-1 rounded-full">Case Study</span>
+        <span class="text-[10px] font-bold tracking-[0.12em] uppercase text-[#6b7280] px-2.5 py-1 rounded-full border border-[#e5e7eb]">2024</span>
+        <span class="text-[10px] font-bold tracking-[0.12em] uppercase text-teal-700 bg-teal-50 border border-teal-100 px-2.5 py-1 rounded-full">Live</span>
+      </div>
+      <h1 class="section-heading text-[clamp(2rem,7vw,4rem)] font-black text-[#111827] leading-[0.95] mb-4">Property<br>Landing Builder</h1>
+      <p class="text-lg font-serif italic text-[#0d9488] leading-snug mb-5">People trying to sell their home get lost in noisy listing sites. A property deserves its own page — not a row in a table.</p>
+      <div class="flex flex-wrap gap-3 text-xs text-[#6b7280]">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0z"/></svg>
+          Time to first page: under 5 minutes
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Role: Solo product + engineer
+        </span>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          AI-powered: Claude by Anthropic
+        </span>
+      </div>
+    </header>
+
+    <!-- Tech stack chips -->
+    <div class="bento-card p-5 mb-10 flex flex-wrap gap-2">
+      <span class="text-[11px] font-semibold text-[#6b7280] mr-1 self-center">Stack:</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Next.js</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Claude AI (Anthropic)</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Tailwind CSS</span>
+      <span class="text-[10px] font-medium px-2.5 py-1 rounded-full bg-[#f3f4f6] text-[#374151] border border-[#e5e7eb]">Vercel</span>
+    </div>
+
+    <!-- Body -->
+    <article class="prose-body">
+
+      <h3>The problem</h3>
+      <p>
+        Listing sites like Yad2 (Israel) or Zillow (US) turn every property into a uniform row in a database. Same template, same structure, same visual noise. A family home with a story behind it — the garden someone spent ten years building, the kitchen that's actually the heart of the house — becomes "4BR / 2BA / 120sqm."
+      </p>
+      <p>
+        Sellers who aren't real estate agents have no good tools for presenting their property in a way that makes buyers stop and feel something. They either rely on the listing site's generic format, or they try to build something themselves and spend days on it.
+      </p>
+      <p>
+        The insight: a standalone landing page does what a listing row can't. It sets the tone, tells the story, and makes a buyer imagine themselves in the space rather than comparing it to a spreadsheet.
+      </p>
+
+      <h3>What I built</h3>
+      <p>
+        Property Landing Builder is a zero-friction web tool. You input the property details — rooms, location, features, photos, and anything you want to highlight — and Claude AI writes a compelling narrative and generates a beautiful, standalone landing page.
+      </p>
+      <p>
+        No account. No design skills. No subscription. You get a page in under five minutes. Share the URL directly with buyers, post it in WhatsApp groups, or link to it from a listing site.
+      </p>
+      <p>
+        The AI writing is the core value. Claude doesn't just summarize the inputs — it writes the property's story. It finds the angle: maybe the location is everything, or the renovation history makes it special, or the layout is perfect for a specific kind of buyer. The output reads like it was written by someone who actually cares about the property, because the prompt engineering makes it behave that way.
+      </p>
+
+      <h3>The key product decisions</h3>
+      <p>
+        <strong>No account required.</strong> Every friction point before "see the output" is a reason to leave. I removed them all. You fill in the form, hit generate, and get a URL. If you want to edit it, the editor is right there. No sign-up gate.
+      </p>
+      <p>
+        <strong>Claude over GPT.</strong> I tested both. Claude writes more nuanced, less generic real estate copy. The tendency to vary sentence structure and avoid filler phrases made the output significantly better in blind tests I ran on early users.
+      </p>
+      <p>
+        <strong>Mobile-first generated pages.</strong> Buyers share listing links on WhatsApp. WhatsApp is mobile. The generated pages needed to look great on a phone first, desktop second.
+      </p>
+      <p>
+        <strong>Opinionated design with no customization.</strong> Early versions had style options. They slowed everything down and introduced bad choices. I removed them. One beautiful template, done well, beats twenty mediocre options.
+      </p>
+
+      <h3>What I learned about AI product design</h3>
+      <p>
+        The hardest part wasn't writing the prompt — it was handling the cases where the AI output was wrong in a way users couldn't immediately see. A hallucinated detail about a property (e.g., implying there's a pool when there isn't) is a legal and trust problem, not just a UX problem.
+      </p>
+      <p>
+        My solution: the prompt instructs Claude to only use information explicitly provided in the form inputs, never to invent or assume, and to flag any detail it's uncertain about with a placeholder instead of a guess. This produces more conservative copy in some cases, but it means the user can trust what they're publishing.
+      </p>
+      <p>
+        The second big learning: streaming the response dramatically improves perceived quality. When users see text appearing in real time, they feel like something smart is happening. When they wait 15 seconds for a full response to appear, they get anxious about whether it's working. The underlying quality was identical — the experience was night and day.
+      </p>
+
+      <h3>What's next</h3>
+      <p>
+        Currently working on a sharing/tracking layer: a simple analytics dashboard on each generated page so sellers can see who's viewed it and when. This turns a static page into a lead-tracking tool, which changes the value proposition from "nice presentation" to "actual business intelligence about your buyers."
+      </p>
+
+    </article>
+
+    <!-- CTA row -->
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a href="https://property-landing-builder.vercel.app/builder" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-[#0d9488] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#0f766e] transition-colors duration-200">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+        Try the Builder
+      </a>
+      <a href="https://github.com/hadarsap1/property-landing-builder" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-[#6b7280] text-sm font-medium px-4 py-2.5 rounded-full border border-[#e5e7eb] hover:border-[#d1d5db] hover:text-[#374151] transition-colors duration-200">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+      <a href="/#projects" class="inline-flex items-center gap-2 text-[#6b7280] text-sm font-medium px-4 py-2.5 rounded-full border border-[#e5e7eb] hover:border-[#d1d5db] hover:text-[#374151] transition-colors duration-200">
+        ← All projects
+      </a>
+    </div>
+
+    <!-- Divider + next case study -->
+    <div class="mt-14 pt-8 border-t border-[#e5e7eb]">
+      <p class="text-xs font-semibold tracking-[0.1em] uppercase text-[#9ca3af] mb-4">Next case study</p>
+      <a href="/projects/clearday" class="bento-card bento-card-project-primary p-5 flex items-center justify-between group">
+        <div>
+          <p class="text-sm font-bold text-[#111827] group-hover:text-[#0d9488] transition-colors">Clearday</p>
+          <p class="text-xs text-[#6b7280] mt-0.5">Wartime school coordination platform built in two weeks</p>
+        </div>
+        <svg class="w-4 h-4 text-[#9ca3af] group-hover:text-[#0d9488] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="py-6 text-[#9ca3af] text-xs border-t border-[#e5e7eb]/60">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+      <p>© 2026 Hadar Sapir</p>
+      <a href="/" class="hover:text-[#6b7280] transition-colors">hadarsap.online →</a>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      });
+    }
+  </script>
+</body>
+</html>
