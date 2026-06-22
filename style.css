@@ -137,6 +137,19 @@ html.dark .bento-card.bento-card-project-primary:hover {
   border-left-color: rgba(45, 212, 191, 0.5);
 }
 
+/* Concentric radius: chips inside bento-card (20px outer, 0 padding gap for pill → pill is fine) */
+
+/* Press-scale feedback on all interactive pill buttons — 0.96 is the exact right value */
+.contact-btn-primary:active,
+.contact-btn-secondary:active,
+nav a[href="#contact"]:active,
+nav a[href="/#contact"]:active,
+.social-link:active,
+.testimonial-linkedin:active {
+  transform: scale(0.96) !important;
+  transition-duration: 0.08s !important;
+}
+
 /* WIP card - warm amber tint, signals "in progress" */
 .bento-card.bento-card-wip {
   background: rgba(254, 243, 199, 0.7);
@@ -166,10 +179,15 @@ html.dark .bento-card.bento-card-project-primary:hover {
     inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
-/* Subtle desaturate-to-color reveal on the profile photo */
+/* Subtle desaturate-to-color reveal + 1px inset outline for edge definition */
 .photo-block img {
   filter: grayscale(18%) contrast(1.04);
   transition: filter 0.5s ease;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+}
+
+html.dark .photo-block img {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
 }
 
 .photo-block:hover img {
@@ -230,6 +248,12 @@ html.dark .bento-card.bento-card-project-primary:hover {
   font-variation-settings: 'opsz' 48, 'SOFT' 0, 'WONK' 0;
   font-feature-settings: "kern" 1, "liga" 1;
   letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+/* Prevent orphaned last words in body copy */
+p {
+  text-wrap: pretty;
 }
 
 @media (forced-colors: active) {
@@ -255,11 +279,13 @@ html.dark .bento-card.bento-card-project-primary:hover {
   white-space: nowrap;
   flex-shrink: 0;
   width: 5.5rem;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Impact numbers — warm amber for achievement metrics */
 .gradient-number {
   color: var(--color-amber);
+  font-variant-numeric: tabular-nums;
 }
 
 .fact-label {
@@ -403,6 +429,11 @@ html.dark .bento-card.bento-card-project-primary:hover {
   box-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);
 }
 
+.contact-btn-primary:active {
+  transform: scale(0.96);
+  transition-duration: 0.08s;
+}
+
 .contact-btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -422,6 +453,11 @@ html.dark .bento-card.bento-card-project-primary:hover {
   color: #5eead4;
   border-color: rgba(13, 148, 136, 0.3);
   transform: translateY(-1px);
+}
+
+.contact-btn-secondary:active {
+  transform: scale(0.96);
+  transition-duration: 0.08s;
 }
 
 
@@ -444,6 +480,7 @@ html.dark .bento-card.bento-card-project-primary:hover {
   object-fit: cover;
   object-position: center 40%;
   display: block;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
 }
 
 .adventure-overlay {
@@ -692,7 +729,7 @@ html.dark .passport-card::after {
   margin-bottom: 0.15rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease, border-left-color 0.18s ease;
   font-size: 0.8rem;
   color: #6b7280;
   border-left: 2px solid transparent;
@@ -1492,14 +1529,45 @@ html.dark .testimonial-linkedin:hover {
   outline-offset: 2px;
 }
 
-/* Icon convention: the visible icon represents the action, not current state.
-   - Light mode → show MOON (click to go dark)
-   - Dark mode  → show SUN  (click to go light) */
-.theme-toggle .theme-icon-moon { display: block; }
-.theme-toggle .theme-icon-sun  { display: none; }
+/* Icon crossfade: both icons stay in DOM, transition with opacity + scale + blur.
+   - Light mode → moon visible (click to go dark)
+   - Dark mode  → sun visible (click to go light)
+   Both are absolutely centered so they can cross-fade simultaneously. */
+.theme-toggle {
+  position: relative;
+}
 
-html.dark .theme-toggle .theme-icon-moon { display: none; }
-html.dark .theme-toggle .theme-icon-sun  { display: block; }
+.theme-toggle .theme-icon-moon,
+.theme-toggle .theme-icon-sun {
+  position: absolute;
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Light mode: moon shown, sun hidden */
+.theme-toggle .theme-icon-moon {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+.theme-toggle .theme-icon-sun {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Dark mode: sun shown, moon hidden */
+html.dark .theme-toggle .theme-icon-moon {
+  opacity: 0;
+  transform: scale(0.25);
+  filter: blur(4px);
+  pointer-events: none;
+}
+html.dark .theme-toggle .theme-icon-sun {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
 
 
 /* ==========================================================================
