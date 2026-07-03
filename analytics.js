@@ -215,7 +215,7 @@
     } catch (_) { /* analytics must never break the site */ }
   }
 
-  // ── Update engagement data on leave ───────────────────────
+  // ── Update engagement data on leave (via security-definer RPC) ──
   function updateEngagement() {
     if (!visitId) return;
     var seconds = Math.round((Date.now() - startTime) / 1000);
@@ -225,14 +225,15 @@
     }
     var focusedSec = Math.round(totalFocused / 1000);
 
-    fetch(SUPABASE_URL + '/rest/v1/' + TABLE + '?id=eq.' + visitId, {
-      method: 'PATCH',
+    fetch(SUPABASE_URL + '/rest/v1/rpc/update_visit_engagement', {
+      method: 'POST',
       headers: { ...HEADERS, 'Prefer': 'return=minimal' },
       body: JSON.stringify({
-        time_spent_s: seconds,
-        scroll_depth: maxScrollDepth,
-        click_count: clickCount,
-        focused_time_s: focusedSec
+        p_id:        visitId,
+        p_time_s:    seconds,
+        p_scroll:    maxScrollDepth,
+        p_clicks:    clickCount,
+        p_focused_s: focusedSec
       }),
       keepalive: true
     });
