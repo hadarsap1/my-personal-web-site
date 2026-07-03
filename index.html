@@ -9,13 +9,13 @@
   <meta property="og:title" content="Hadar Sapir | Senior Product & Data">
   <meta property="og:description" content="Architecting high-scale systems and leading impactful communities. From data infrastructure to AI solutions.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://hadarsap.online/og-card.png">
+  <meta property="og:image" content="https://hadarsap.online/og-card.webp">
   <meta property="og:url" content="https://hadarsap.online">
   <link rel="canonical" href="https://hadarsap.online">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Hadar Sapir | Senior Product & Data">
   <meta name="twitter:description" content="Architecting high-scale systems and leading impactful communities.">
-  <meta name="twitter:image" content="https://hadarsap.online/og-card.png">
+  <meta name="twitter:image" content="https://hadarsap.online/og-card.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Fraunces: editorial display/heading serif with optical sizing -->
@@ -37,7 +37,7 @@
       } catch (e) {}
     })();
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -167,15 +167,18 @@
 
           <!-- Profile photo - large, confident -->
           <div class="photo-block overflow-hidden w-full md:h-[420px]">
-            <img
-              src="profile-linkedin.png"
-              alt="Hadar Sapir"
-              width="320"
-              height="420"
-              fetchpriority="high"
-              class="w-full h-auto md:h-full md:object-cover"
-              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 420%22%3E%3Crect fill=%22%23ede4d0%22 width=%22320%22 height=%22420%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%238a8070%22 font-size=%2280%22 font-family=%22Inter,sans-serif%22%3EHS%3C/text%3E%3C/svg%3E'"
-            >
+            <picture>
+              <source srcset="profile-linkedin.webp" type="image/webp">
+              <img
+                src="profile-linkedin.png"
+                alt="Hadar Sapir"
+                width="320"
+                height="420"
+                fetchpriority="high"
+                class="w-full h-auto md:h-full md:object-cover"
+                onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 420%22%3E%3Crect fill=%22%23ede4d0%22 width=%22320%22 height=%22420%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%228a8070%22 font-size=%2280%22 font-family=%22Inter,sans-serif%22%3EHS%3C/text%3E%3C/svg%3E'"
+              >
+            </picture>
           </div>
 
           <!-- Right column: career quick stats + expertise pills -->
@@ -765,15 +768,18 @@
 
     <!-- ===== ADVENTURE PHOTO BREAK - full bleed, no card chrome ===== -->
     <div class="adventure-break">
-      <img
-        src="adventure.jpg"
-        alt="Hadar adventuring in the world"
-        width="1920"
-        height="1080"
-        class="adventure-img"
-        loading="lazy"
-        onerror="this.style.display='none';this.parentElement.classList.add('adventure-fallback')"
-      >
+      <picture>
+        <source srcset="adventure.webp" type="image/webp">
+        <img
+          src="adventure.jpg"
+          alt="Hadar adventuring in the world"
+          width="1920"
+          height="1080"
+          class="adventure-img"
+          loading="lazy"
+          onerror="this.style.display='none';this.parentElement.classList.add('adventure-fallback')"
+        >
+      </picture>
       <div class="adventure-overlay">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
           <p class="text-white/90 text-2xl sm:text-3xl font-black tracking-tight leading-snug max-w-sm">
@@ -807,7 +813,10 @@
 
           <!-- Mission photo -->
           <div class="bento-card overflow-hidden p-0">
-            <img src="mission-running.png" alt="Runners at sunrise - Running with Rami community" class="w-full h-48 sm:h-56 object-cover" loading="lazy" style="box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);">
+            <picture>
+              <source srcset="mission-running.webp" type="image/webp">
+              <img src="mission-running.png" alt="Runners at sunrise - Running with Rami community" class="w-full h-48 sm:h-56 object-cover" loading="lazy" style="box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);">
+            </picture>
           </div>
 
           <!-- Pull quote card -->
@@ -960,10 +969,6 @@
   </footer>
   <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
 
-  <!-- Custom terminal cursor -->
-  <div class="site-cursor" id="site-cursor" aria-hidden="true"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="analytics.js" defer></script>
   <script src="https://d3js.org/d3.v7.min.js" defer></script>
   <script src="https://d3js.org/topojson.v3.min.js" defer></script>

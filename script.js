@@ -340,7 +340,7 @@ document.querySelectorAll('.fade-in:not(.bento-card)').forEach((el) => {
   observer.observe(el);
 });
 
-// Active nav state
+// Active nav state — threshold 0 + rootMargin so tall sections register on mobile too
 const navLinksAll = document.querySelectorAll('.nav-link, .mobile-nav-link');
 const sections = document.querySelectorAll('section[id]');
 const navObserver = new IntersectionObserver(
@@ -360,7 +360,7 @@ const navObserver = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' }
+  { threshold: 0, rootMargin: '-80px 0px -60% 0px' }
 );
 sections.forEach((section) => navObserver.observe(section));
 
@@ -439,7 +439,7 @@ function requestResume() {
     'Please send your resume to: ' + email + '\n\n' +
     'Looking forward to connecting!'
   );
-  window.open('mailto:hadarsap@gmail.com?subject=' + subject + '&reply-to=' + encodeURIComponent(email) + '&body=' + body);
+  window.open('mailto:hadarsap@gmail.com?subject=' + subject + '&body=' + body);
   if (btn) btn.disabled = true;
   document.getElementById('resume-sent').classList.remove('hidden');
   emailInput.value = '';
@@ -717,48 +717,6 @@ if (!prefersReducedMotion && supportsHover) {
 }
 
 
-// ===================================================================
-// CUSTOM TERMINAL CURSOR
-// Replaces the OS cursor on desktop with a blinking terminal bar.
-// Only activates on hover-capable pointer devices.
-// ===================================================================
-(function initCursor() {
-  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (!supportsHover) return;
-
-  const cursor = document.getElementById('site-cursor');
-  if (!cursor) return;
-
-  let mouseX = -100, mouseY = -100;
-
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top  = mouseY + 'px';
-  });
-
-  document.addEventListener('mouseleave', () => {
-    cursor.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', () => {
-    cursor.style.opacity = '1';
-  });
-
-  // Enlarge cursor on interactive elements
-  const interactiveSelector = 'a, button, input, textarea, select, [role="button"], .bento-card, .gitlog-commit';
-  document.querySelectorAll(interactiveSelector).forEach((el) => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-  });
-
-  // Dark cursor variant inside dark sections
-  const darkSections = document.querySelectorAll('.bento-card-dark, .gitlog-card, .terminal-card, .api-card, .map-outer-card');
-  darkSections.forEach((el) => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('cursor-dark'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-dark'));
-  });
-})();
 
 
 // ===================================================================

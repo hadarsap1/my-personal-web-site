@@ -1,13 +1,21 @@
-/* Analytics - lightweight visitor tracking via Supabase */
+/* Analytics - lightweight visitor tracking via Supabase REST API (no SDK needed) */
 (function () {
   // ── Config ──────────────────────────────────────────────
   const SUPABASE_URL = 'https://cbkuupjmemimbfuahizn.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNia3V1cGptZW1pbWJmdWFoaXpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTkyNjEsImV4cCI6MjA4NzUzNTI2MX0.q4BDFj5KN25_FmI2yofH9SBDsFcep9GKZ_VL3UMJLb0';
   const TABLE = 'visits';
+  // Salt prevents rainbow-table reversal of the IPv4 space
+  const IP_SALT = 'hadarsap-v1';
 
-  if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return; // skip until configured
+  if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
 
-  let sb, visitId, startTime = Date.now();
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+  };
+
+  let visitId, startTime = Date.now();
   let maxScrollDepth = 0, clickCount = 0, focusedTime = 0, lastFocusAt = Date.now();
 
   // ── Helpers ─────────────────────────────────────────────
@@ -90,26 +98,24 @@
   // ── Geo helpers ────────────────────────────────────────
   async function hashIP(ip) {
     if (!ip) return null;
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip));
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(IP_SALT + ip));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Try ipwho.is first (HTTPS, free), fall back to ipapi.co
   async function fetchGeo() {
-    // Attempt 1: ipwho.is (HTTPS, no key, generous limits)
     try {
       const r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(4000) });
       if (r.ok) {
         const g = await r.json();
         if (g.success !== false && g.country) return {
           country: g.country, countryCode: g.country_code, city: g.city,
-          region: g.region, lat: g.latitude, lng: g.longitude, org: g.connection && g.connection.org || null,
+          region: g.region, lat: g.latitude, lng: g.longitude,
+          org: g.connection && g.connection.org || null,
           tz: g.timezone && g.timezone.id || null, ip: g.ip
         };
       }
     } catch (_) {}
 
-    // Attempt 2: ipapi.co (HTTPS, 1000/day free)
     try {
       const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
       if (r.ok) {
@@ -125,36 +131,35 @@
     return null;
   }
 
+  // ── REST helpers ─────────────────────────────────────────
+  async function restInsert(row) {
+    const r = await fetch(SUPABASE_URL + '/rest/v1/' + TABLE, {
+      method: 'POST',
+      headers: { ...HEADERS, 'Prefer': 'return=representation' },
+      body: JSON.stringify(row)
+    });
+    if (!r.ok) return null;
+    const data = await r.json();
+    return data && data[0] ? data[0].id : null;
+  }
+
   // ── Init ────────────────────────────────────────────────
   async function init() {
-    // Deduplicate: only one visit per browser session (same tab)
     var existingId = sessionStorage.getItem('_v_id');
-    if (existingId) {
-      try {
-        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        visitId = existingId;
-      } catch (_) {}
-      return;
-    }
+    if (existingId) { visitId = existingId; return; }
 
-    // Cross-tab cooldown: if another tab already registered a visit in the last
-    // 10 minutes, reuse that row instead of creating a duplicate.
     var COOLDOWN_MS = 10 * 60 * 1000;
     try {
       var lastTs = parseInt(localStorage.getItem('_v_ts') || '0', 10);
       var lastId = localStorage.getItem('_v_lid');
       if (lastId && Date.now() - lastTs < COOLDOWN_MS) {
         visitId = lastId;
-        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         sessionStorage.setItem('_v_id', lastId);
         return;
       }
     } catch (_) {}
 
     try {
-      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-      // Fetch geo - IP is hashed (SHA-256) for returning-visitor detection, never stored raw
       let country = null, countryCode = null, city = null;
       let region = null, latitude = null, longitude = null, org = null, tz = null, ipHash = null;
 
@@ -176,14 +181,8 @@
       const row = {
         page_url: location.pathname + location.search,
         referrer: document.referrer || null,
-        country: country,
-        country_code: countryCode,
-        city: city,
-        region: region,
-        latitude: latitude,
-        longitude: longitude,
-        org: org,
-        timezone: tz,
+        country, country_code: countryCode, city, region,
+        latitude, longitude, org, timezone: tz,
         device_type: detectDevice(),
         browser: detectBrowser(),
         os: detectOS(),
@@ -191,7 +190,6 @@
         language: navigator.language || null,
         ip_hash: ipHash,
         time_spent_s: 0,
-        // New fields
         scroll_depth: 0,
         click_count: 0,
         focused_time_s: 0,
@@ -205,12 +203,12 @@
         visit_weekday: new Date().getDay()
       };
 
-      const { data, error } = await sb.from(TABLE).insert(row).select('id').single();
-      if (!error && data) {
-        visitId = data.id;
+      const id = await restInsert(row);
+      if (id) {
+        visitId = id;
         try {
-          sessionStorage.setItem('_v_id', data.id);
-          localStorage.setItem('_v_lid', data.id);
+          sessionStorage.setItem('_v_id', id);
+          localStorage.setItem('_v_lid', id);
           localStorage.setItem('_v_ts', Date.now().toString());
         } catch (_) {}
       }
@@ -219,9 +217,8 @@
 
   // ── Update engagement data on leave ───────────────────────
   function updateEngagement() {
-    if (!sb || !visitId) return;
+    if (!visitId) return;
     var seconds = Math.round((Date.now() - startTime) / 1000);
-    // Add remaining focused time
     var totalFocused = focusedTime;
     if (document.visibilityState !== 'hidden') {
       totalFocused += Date.now() - lastFocusAt;
@@ -230,12 +227,7 @@
 
     fetch(SUPABASE_URL + '/rest/v1/' + TABLE + '?id=eq.' + visitId, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Prefer': 'return=minimal'
-      },
+      headers: { ...HEADERS, 'Prefer': 'return=minimal' },
       body: JSON.stringify({
         time_spent_s: seconds,
         scroll_depth: maxScrollDepth,
