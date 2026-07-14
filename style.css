@@ -242,6 +242,32 @@ html.dark .photo-block img {
   }
 }
 
+/* Accent word inside display headings — lighter italic Fraunces, teal, wonky glyphs */
+.heading-accent {
+  font-style: italic;
+  font-weight: 450;
+  font-variation-settings: 'opsz' 48, 'SOFT' 50, 'WONK' 1;
+  color: #0d9488;
+}
+
+html.dark .heading-accent,
+.bento-card-dark .heading-accent,
+.contact-block .heading-accent {
+  color: #2dd4bf;
+}
+
+/* Scroll progress bar — thin teal line along the top viewport edge */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, #0d9488, #2dd4bf);
+  z-index: 100;
+  pointer-events: none;
+}
+
 /* Section display headings — Fraunces for all editorial h2s */
 .section-heading {
   font-family: 'Fraunces', Georgia, serif;
