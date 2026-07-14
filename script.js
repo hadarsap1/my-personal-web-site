@@ -426,27 +426,115 @@ window.addEventListener('resize', () => {
   }, 250);
 });
 
-// ── Resume request ────────────────────────────────────
-function requestResume() {
-  const emailInput = document.getElementById('resume-contact');
-  const btn = document.getElementById('resume-btn');
-  const email = emailInput.value.trim();
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
-  const subject = encodeURIComponent('Finally, a Product leader who makes it easy');
-  const body = encodeURIComponent(
-    'Hi Hadar,\n\n' +
-    'Your site got my attention and I want to see if our team is the kind of challenge you are looking for next.\n\n' +
-    'Please send your resume to: ' + email + '\n\n' +
-    'Looking forward to connecting!'
-  );
-  window.open('mailto:hadarsap@gmail.com?subject=' + subject + '&body=' + body);
-  if (btn) btn.disabled = true;
-  document.getElementById('resume-sent').classList.remove('hidden');
-  emailInput.value = '';
+// ── Inquiry form (tailored resume request / message) ──
+// Rows land in the Supabase `inquiries` table (anon INSERT only, no reads).
+function initInquiryForm() {
+  const form = document.getElementById('inquiry-form');
+  if (!form) return;
+
+  const SUPABASE_URL = 'https://cbkuupjmemimbfuahizn.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNia3V1cGptZW1pbWJmdWFoaXpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTkyNjEsImV4cCI6MjA4NzUzNTI2MX0.q4BDFj5KN25_FmI2yofH9SBDsFcep9GKZ_VL3UMJLb0';
+
+  const emailInput = document.getElementById('inq-email');
+  const companyInput = document.getElementById('inq-company');
+  const jdInput = document.getElementById('inq-jd');
+  const messageInput = document.getElementById('inq-message');
+  const honeypot = document.getElementById('inq-website');
+  const btn = document.getElementById('inquiry-btn');
+  const btnLabel = document.getElementById('inquiry-btn-label');
+  const status = document.getElementById('inquiry-status');
+  const intentBtns = form.querySelectorAll('.inquiry-intent');
+
+  let intent = 'resume_request';
+
+  intentBtns.forEach(b => b.addEventListener('click', () => {
+    intent = b.dataset.intent;
+    intentBtns.forEach(x => {
+      const active = x === b;
+      x.classList.toggle('inquiry-intent-active', active);
+      x.setAttribute('aria-pressed', String(active));
+    });
+    const isResume = intent === 'resume_request';
+    jdInput.hidden = !isResume;
+    companyInput.placeholder = isResume
+      ? 'Company & role (e.g. Acme — Head of Product)'
+      : 'Company & role (optional)';
+    messageInput.placeholder = isResume ? 'Anything I should know? (optional)' : 'Your message';
+    btnLabel.textContent = isResume ? 'Request tailored resume' : 'Send message';
+    hideStatus();
+  }));
+
+  function hideStatus() {
+    status.hidden = true;
+  }
+
+  function showStatus(text, ok) {
+    status.textContent = '';
+    status.hidden = false;
+    status.classList.remove('text-emerald-400', 'text-amber-400');
+    status.classList.add(ok ? 'text-emerald-400' : 'text-amber-400');
+    if (ok) {
+      status.textContent = text;
+    } else {
+      status.append(text + ' ');
+      const a = document.createElement('a');
+      a.href = 'mailto:hadarsap@gmail.com';
+      a.className = 'underline';
+      a.textContent = 'email me directly';
+      status.append(a, '.');
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideStatus();
+
+    const email = emailInput.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
+    const isResume = intent === 'resume_request';
+    const company = companyInput.value.trim();
+    const message = messageInput.value.trim();
+    if (isResume && !company) { companyInput.focus(); return; }
+    if (!isResume && !message) { messageInput.focus(); return; }
+
+    // Honeypot filled = bot. Pretend success, store nothing.
+    if (honeypot.value) {
+      form.reset();
+      showStatus(isResume ? 'Got it — a tailored resume is on its way within 24 hours.' : 'Message sent. I reply within 24 hours.', true);
+      return;
+    }
+
+    btn.disabled = true;
+    try {
+      const r = await fetch(SUPABASE_URL + '/rest/v1/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          type: intent,
+          email: email,
+          company_role: company || null,
+          jd_link: (isResume && jdInput.value.trim()) || null,
+          message: message || null,
+          page_url: location.pathname + location.search
+        })
+      });
+      if (!r.ok) throw new Error('insert failed');
+      form.reset();
+      showStatus(isResume ? 'Got it — a tailored resume is on its way within 24 hours.' : 'Message sent. I reply within 24 hours.', true);
+    } catch (_) {
+      showStatus('Something went wrong — please', false);
+    } finally {
+      btn.disabled = false;
+    }
+  });
 }
 
-const resumeBtn = document.getElementById('resume-btn');
-if (resumeBtn) resumeBtn.addEventListener('click', requestResume);
+initInquiryForm();
 
 // ── Copy email ────────────────────────────────────────
 function copyEmail(btn) {

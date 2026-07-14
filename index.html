@@ -237,8 +237,8 @@
             <!-- Hero CTAs -->
             <div class="flex flex-wrap items-center gap-3 mt-2">
               <a href="#contact" class="inline-flex items-center gap-2 bg-[#0d9488] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#0f766e] transition-colors duration-200">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0-3-3m3 3 3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Get My Resume
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Get a Tailored Resume
               </a>
               <a href="#projects" class="inline-flex items-center gap-2 text-[#6b7280] text-sm font-medium px-4 py-2.5 rounded-full border border-[#e5e7eb] hover:border-[#d1d5db] hover:text-[#374151] transition-colors duration-200">
                 View Work
@@ -464,8 +464,26 @@
           <!-- Dark CTA card - inverted, creates contrast in the column -->
           <div class="bento-card bento-card-dark p-6 flex flex-col justify-between">
             <div>
-              <p class="text-[#f9fafb] text-sm font-semibold leading-snug">Looking for my next professional home.</p>
-              <p class="text-[#9ca3af] text-xs mt-2 leading-relaxed">I step into core leadership teams to drive AI and data products. From defining the roadmap to scaling operations, I take full ownership of the business impact.</p>
+              <p class="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#6b7280] mb-3">What I'm looking for</p>
+              <p class="text-[#f9fafb] text-sm font-semibold leading-snug">My next professional home &mdash; a core leadership seat driving AI and data products.</p>
+              <ul class="mt-4 space-y-2.5 text-xs text-[#9ca3af]">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1 flex-shrink-0" aria-hidden="true"></span>
+                  <span><span class="text-[#e5e7eb] font-medium">Roles:</span> Head of Product &middot; Senior / Principal PM</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1 flex-shrink-0" aria-hidden="true"></span>
+                  <span><span class="text-[#e5e7eb] font-medium">Focus:</span> AI &amp; data products, B2B SaaS</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1 flex-shrink-0" aria-hidden="true"></span>
+                  <span><span class="text-[#e5e7eb] font-medium">Location:</span> Israel &middot; hybrid or remote</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1 flex-shrink-0" aria-hidden="true"></span>
+                  <span><span class="text-[#e5e7eb] font-medium">Status:</span> In active search &middot; replies &lt; 24h</span>
+                </li>
+              </ul>
             </div>
             <div class="mt-6">
               <a href="#contact" class="inline-flex items-center gap-2 bg-[#0d9488] text-white text-sm font-bold px-5 py-2.5 rounded-full hover:bg-[#0f766e] transition-colors duration-200">
@@ -883,19 +901,30 @@
           <div class="mt-8 pt-8 border-t border-white/[0.08]">
             <span class="inline-flex items-center gap-1.5 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-semibold px-3 py-1 rounded-full mb-3">
               <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              Resume PDF
+              Tailored Resume
             </span>
-            <p class="text-[#f9fafb] text-sm font-semibold mb-1.5">Want the full resume?</p>
-            <p class="text-[#6b7280] text-xs mb-4 leading-relaxed">Leave your email and I'll send it within 24 hours. No spam, no sequences.</p>
-            <div class="flex gap-2 max-w-sm">
-              <input type="email" id="resume-contact" aria-label="Your email address" placeholder="your@email.com" class="flex-1 bg-white/[0.06] border border-white/[0.12] rounded-full px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline focus:outline-2 focus:outline-teal-400/60 focus:border-transparent">
-              <button id="resume-btn" aria-label="Request full resume" class="inline-flex items-center gap-1.5 bg-teal-500 hover:bg-teal-400 text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+            <p class="text-[#f9fafb] text-sm font-semibold mb-1.5">Every resume I send is tailored to your role.</p>
+            <p class="text-[#6b7280] text-xs mb-4 leading-relaxed">Tell me about the position and you'll have a resume built for it within 24 hours. No spam, no sequences.</p>
+
+            <form id="inquiry-form" class="max-w-sm" novalidate>
+              <div class="flex gap-2 mb-3" role="group" aria-label="What do you need?">
+                <button type="button" class="inquiry-intent inquiry-intent-active" data-intent="resume_request" aria-pressed="true">Tailored resume</button>
+                <button type="button" class="inquiry-intent" data-intent="message" aria-pressed="false">Just a message</button>
+              </div>
+              <div class="space-y-2">
+                <input type="email" id="inq-email" required aria-label="Your email address" placeholder="your@email.com" autocomplete="email" class="w-full bg-white/[0.06] border border-white/[0.12] rounded-xl px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline focus:outline-2 focus:outline-teal-400/60 focus:border-transparent">
+                <input type="text" id="inq-company" aria-label="Company and role" placeholder="Company &amp; role (e.g. Acme — Head of Product)" class="w-full bg-white/[0.06] border border-white/[0.12] rounded-xl px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline focus:outline-2 focus:outline-teal-400/60 focus:border-transparent">
+                <input type="url" id="inq-jd" aria-label="Job description link (optional)" placeholder="Link to the job description (optional)" class="w-full bg-white/[0.06] border border-white/[0.12] rounded-xl px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline focus:outline-2 focus:outline-teal-400/60 focus:border-transparent">
+                <textarea id="inq-message" rows="3" aria-label="Message" placeholder="Anything I should know? (optional)" class="w-full bg-white/[0.06] border border-white/[0.12] rounded-xl px-4 py-2 text-sm text-[#f9fafb] placeholder-[#6b7280] focus:outline focus:outline-2 focus:outline-teal-400/60 focus:border-transparent resize-none"></textarea>
+                <input type="text" id="inq-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
+              </div>
+              <button type="submit" id="inquiry-btn" class="mt-3 inline-flex items-center gap-1.5 bg-teal-500 hover:bg-teal-400 text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-                Send it
+                <span id="inquiry-btn-label">Request tailored resume</span>
               </button>
-            </div>
-            <p class="text-[#6b7280] text-xs mt-2">By submitting, you agree to my <a href="/privacy-policy" class="text-teal-400 hover:underline">Privacy Policy</a>.</p>
-            <p id="resume-sent" class="hidden text-emerald-400 text-xs mt-1">Your mail app is ready. Hit send!</p>
+              <p class="text-[#6b7280] text-xs mt-2">By submitting, you agree to my <a href="/privacy-policy" class="text-teal-400 hover:underline">Privacy Policy</a>.</p>
+              <p id="inquiry-status" class="text-xs mt-1" role="status" aria-live="polite" hidden></p>
+            </form>
           </div>
 
           <p class="text-[#9ca3af] text-xs mt-6">
