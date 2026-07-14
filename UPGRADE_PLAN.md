@@ -12,19 +12,25 @@ in priority order.
 
 ## Phase 1 — Remove job-search friction (highest impact)
 
-### 1.1 Instant resume access
-Today "Get My Resume" scrolls to an email-capture that opens a mailto and promises delivery
-"within 24 hours." Recruiters won't wait — most will bounce.
+### 1.1 Tailored-resume request flow (no generic PDF)
+Hadar tailors every resume to the specific role/company, so the site must NOT host a generic
+resume file. Instead, make the tailoring itself the selling point and fix the broken mechanics
+of the current request flow (mailto-only, silently fails without a mail client).
 
-- Build `/resume/` — an HTML resume page sharing `style.css`, print-optimized (`@media print`)
-  so ⌘P produces a clean one-page PDF. Always up to date, no binary in git to forget.
-- Add `resume.pdf` (exported from that page) for a one-click **Download PDF** button.
-- Hero CTA "Get My Resume" → links straight to `/resume/`. Keep the email field in #contact as a
-  secondary "want it in your inbox?" option, not the only path.
-- Track `resume_view` / `resume_download` events in `analytics.js` (new event column or reuse
-  visits table pattern) so Hadar can see recruiter engagement on the dashboard.
+- Reframe the copy: "Every resume I send is tailored to your role. Tell me about it and you'll
+  have one within 24 hours." — turns the wait from friction into a signal of seriousness.
+- Replace the bare email field with a small request form: email + role/company + optional JD
+  link. Stored in a Supabase `resume_requests` table (anon INSERT only, RLS), same REST pattern
+  as `analytics.js`. Keep mailto as fallback.
+- Hero CTA "Get My Resume" → "Request a Tailored Resume", scrolls to that form.
+- Make the site itself carry the full generic career picture (experience detail, case studies —
+  Phases 2–3), so nobody actually needs a generic PDF to evaluate fit.
+- Track request submissions in the analytics dashboard.
+- Optional later: unlisted per-company pages (e.g. `/r/<company>/`) where a tailored PDF +
+  personalized intro lives for a specific process — shared only as a private link, never indexed
+  (noindex + excluded from sitemap).
 
-**Needs from Hadar:** current resume content (or approve generating it from site content + LinkedIn).
+**Needs from Hadar:** none to build; just check Supabase (or dashboard) for incoming requests.
 
 ### 1.2 "What I'm looking for" card
 Recruiters need role fit in 5 seconds. Add a compact card near the hero or in #experience's right
