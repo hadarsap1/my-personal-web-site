@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Statement | Hadar Sapir</title>
+  <meta name="description" content="Accessibility statement for hadarsap.online — Hadar Sapir's personal portfolio website.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://hadarsap.online/accessibility">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23111827' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' fill='%230d9488' font-size='42' font-weight='700' font-family='Inter,sans-serif'>HS</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #0d9488;
+      --teal-deep: #0f766e;
+      --ink: #111827;
+      --day: #f9fafb;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--day);
+      color: var(--ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-logo {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .nav-sep { color: #9ca3af; font-size: 0.85rem; }
+    .nav-page { color: #6b7280; font-size: 0.85rem; }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    .updated { color: #9ca3af; font-size: 0.85rem; margin-bottom: 2.25rem; }
+    h2 { font-size: 1.1rem; font-weight: 700; margin: 2rem 0 0.5rem; }
+    ul { padding-left: 1.25rem; }
+    li { margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="/">Hadar Sapir</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-page">Accessibility Statement</span>
+  </nav>
+
+  <main>
+    <h1>Accessibility Statement</h1>
+    <p class="updated">Last updated: July 14, 2026</p>
+
+    <p>
+      I want this website to be usable by everyone, including people with disabilities.
+      The site aims to conform to <strong>WCAG 2.1 Level AA</strong> (aligned with Israeli
+      Standard 5568).
+    </p>
+
+    <h2>What's in place</h2>
+    <ul>
+      <li>Full keyboard navigation with visible focus indicators.</li>
+      <li>Semantic headings, landmarks, and labels for all form fields.</li>
+      <li>Alternative text for meaningful images.</li>
+      <li>Sufficient color contrast for text.</li>
+      <li>Responsive layout that supports browser zoom up to 200%.</li>
+    </ul>
+
+    <h2>Found an issue?</h2>
+    <p>
+      If anything on this site is hard to use with assistive technology, please tell me and
+      I'll fix it promptly: <a href="mailto:hadarsap@gmail.com">hadarsap@gmail.com</a>.
+    </p>
+
+    <p style="margin-top:2.5rem"><a href="/privacy-policy">Privacy Policy</a> · <a href="/">Back to home</a></p>
+  </main>
+</body>
+</html>
